@@ -61,6 +61,7 @@ async def on_message(wsapp, message):
 
 async def on_connect(websocket):
     global output
+    print ('Client connected')
 
     async def receive(websocket):
         pass
