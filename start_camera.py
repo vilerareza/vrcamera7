@@ -70,7 +70,7 @@ async def on_connect(websocket):
         while True:
             try:
                 async with output.condition:
-                    output.condition.wait()
+                    await output.condition.wait()
                     frame = output.frame
                     print ('sending')
                     #websocket.send(frame, opcode=2)
