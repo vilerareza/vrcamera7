@@ -1,3 +1,8 @@
+
+import asyncio
+from threading import Condition, Lock
+import websockets
+
 from functools import partial
 from camera import Camera
 from streamingoutput import StreamingOutput
@@ -5,8 +10,7 @@ from servo import Servo
 from light import Light
 from threading import Thread
 import json
-import websocket
-import subprocess
+
 
 # Server host
 serverHost = "192.168.50.119:8000"
@@ -24,7 +28,7 @@ servoY = Servo(channel=1)
 # Light
 light = Light(pin = 17)
 
-def on_message(wsapp, message):
+async def on_message(wsapp, message):
     message = json.loads(message)
     if message['op'] == 'mv':
         # Movement
@@ -54,41 +58,60 @@ def on_message(wsapp, message):
         else:
             Thread(target = light.led_off).start()
 
-try:
-    # Update the status LED to amber
-    #Thread(target = partial(subprocess.run, ['python','rgbled.py','[35,10,0]'])).start()
-    # Start camera
-    #camera.start_camera(output, frame_size = frame_size, frame_rate = frame_rate)
-    
-    # Websocket App: Used for receiving control command from server
-    # wsapp = websocket.WebSocketApp(f"ws://{serverHost}/ws/control/device1/", on_message=on_message)
-    # try:
-    #     # Run the websocket in different thread
-    #     wst = Thread(target = wsapp.run_forever)
-    #     wst.start()
-    # except Exception as e:
-    #     print (f'{e}: Failed starting websocketapp connection. closing connection')
-    #     wsapp.close()
-    #     wst = None
-    
-    # Websocket: Used for sending frames to server
-    ws = websocket.WebSocket()
-    ws.connect(f"ws://{serverHost}/ws/frame/device1/")
-    # Update the status LED to blue: Connected to server
-    #Thread(target = partial(subprocess.run, ['python','rgbled.py','[10,10,35]'])).start()
-    # while True:
-    #     with output.condition:
-    #         output.condition.wait()
-    #         frame = output.frame
-    #         ws.send(frame, opcode=2)
 
-except Exception as e:
-    pass
-    # Update the status LED to red: Exception occur
-    #Thread(target = partial(subprocess.run, ['python','rgbled.py','[25,0,0]'])).start()
-    #print (f'{e}: Camera Starting Error')
+async def on_connect(websocket):
+    global frames
+    
+    async def receive(websocket):
+        while True:
+            try:
+                with frames[websocket.path].condition:
+                    frames[websocket.path].content = await websocket.recv()
+                    frames[websocket.path].condition.notify_all()
+                    #print ('receive')
+            except websockets.ConnectionClosedOK:
+                break
+    
+    async def send(websocket):
+        while True:
+            try:
+                with frames[websocket.path].condition:
+                    frames[websocket.path].condition.wait()
+                    await websocket.send(frames[websocket.path].content)
+                    print ('send')
+            except websockets.ConnectionClosedOK:
+                break
 
-finally:
-    pass
-    # Update the status LED to red: End
-    #Thread(target = partial(subprocess.run, ['python','rgbled.py','[25,0,0]'])).start()
+    source, device = websocket.path.split('/')[0], websocket.path.split('/')[0]
+    print (f'Connection request, {websocket.path}')
+    frames [device] = Frame()
+    if source == 'device':
+        await receive(websocket)
+    else:
+        await send(websocket)
+
+async def ws_to_client():
+    async with websockets.serve(on_connect, "0.0.0.0", 8000):
+        print ('starting server')
+        await asyncio.Future()
+
+async def ws_to_server(server_host):
+    print ('Opening ws to server')
+    async with websockets.connect(f"ws://{server_host}") as websocket:
+        while True:
+            print ('sending data to server')
+            await websocket.send("Hello world!")
+            await asyncio.sleep(1)
+
+async def main():
+    task1 = asyncio.create_task(ws_to_server())
+    #task2=asyncio.create_task(another_job())
+    # task3=asyncio.create_task(start_client())
+    # await task1
+    # await task2
+    # await task3
+    # async with websockets.serve(on_connect, "0.0.0.0", 8000):
+    #     await asyncio.Future()
+
+asyncio.run (main())
+
