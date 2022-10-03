@@ -88,7 +88,7 @@ async def ws_to_server(server_host):
     print ('Opening ws to server')
     async with websockets.connect(f"ws://{server_host}:8000/ws/device/device1/") as websocket:
         while True:
-            print ('sending data to server')
+            #print ('sending data to server')
             # Sending dummy data
             await websocket.send("Hello world!")
             await asyncio.sleep(1)
