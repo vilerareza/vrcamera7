@@ -13,7 +13,7 @@ import json
 
 
 # Server host
-serverHost = "192.168.50.119:8000"
+serverHost = "192.168.50.102:8000"
 # Camera object
 camera = Camera()
 # Frame size
@@ -104,7 +104,7 @@ async def ws_to_server(server_host):
             await asyncio.sleep(1)
 
 async def main():
-    task1 = asyncio.create_task(ws_to_server())
+    task1 = asyncio.create_task(ws_to_server(serverHost))
     #task2=asyncio.create_task(another_job())
     # task3=asyncio.create_task(start_client())
     # await task1
