@@ -60,37 +60,25 @@ async def on_message(wsapp, message):
 
 
 async def on_connect(websocket):
-    global frames
-    
+    global output
+
     async def receive(websocket):
-        while True:
-            try:
-                with frames[websocket.path].condition:
-                    frames[websocket.path].content = await websocket.recv()
-                    frames[websocket.path].condition.notify_all()
-                    #print ('receive')
-            except websockets.ConnectionClosedOK:
-                break
+        pass
     
     async def send(websocket):
         while True:
             try:
-                with frames[websocket.path].condition:
-                    frames[websocket.path].condition.wait()
-                    await websocket.send(frames[websocket.path].content)
-                    print ('send')
+                with output.condition:
+                    output.condition.wait()
+                    frame = output.frame
+                    websocket.send(frame, opcode=2)
             except websockets.ConnectionClosedOK:
                 break
 
-    source, device = websocket.path.split('/')[0], websocket.path.split('/')[0]
-    print (f'Connection request, {websocket.path}')
-    frames [device] = Frame()
-    if source == 'device':
-        await receive(websocket)
-    else:
-        await send(websocket)
+    await send(websocket)
 
 async def ws_to_client():
+    print ('Listening ws from client')
     async with websockets.serve(on_connect, "0.0.0.0", 8000):
         print ('starting server')
         await asyncio.Future()
@@ -100,13 +88,16 @@ async def ws_to_server(server_host):
     async with websockets.connect(f"ws://{server_host}:8000/ws/device/device1/") as websocket:
         while True:
             print ('sending data to server')
+            # Sending dummy data
             await websocket.send("Hello world!")
             await asyncio.sleep(1)
 
 async def main():
+    # Start camera
+    camera.start_camera(output, frame_size = frame_size, frame_rate = frame_rate)
     task1 = asyncio.create_task(ws_to_server(serverHost))
+    task2 = asyncio.create_task(ws_to_client())
     #task2=asyncio.create_task(another_job())
-    # task3=asyncio.create_task(start_client())
     await task1
     # await task2
     # await task3
