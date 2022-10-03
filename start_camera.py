@@ -1,6 +1,6 @@
 
 import asyncio
-from threading import Condition, Lock
+from asyncio import Condition
 import websockets
 
 from functools import partial
@@ -71,7 +71,8 @@ async def on_connect(websocket):
                 with output.condition:
                     output.condition.wait()
                     frame = output.frame
-                    websocket.send(frame, opcode=2)
+                    print ('sending')
+                    #websocket.send(frame, opcode=2)
             except websockets.ConnectionClosedOK:
                 break
 
@@ -99,7 +100,7 @@ async def main():
     task2 = asyncio.create_task(ws_to_client())
     #task2=asyncio.create_task(another_job())
     await task1
-    # await task2
+    await task2
     # await task3
     # async with websockets.serve(on_connect, "0.0.0.0", 8000):
     #     await asyncio.Future()
