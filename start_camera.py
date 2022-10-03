@@ -107,7 +107,7 @@ async def main():
     task1 = asyncio.create_task(ws_to_server(serverHost))
     #task2=asyncio.create_task(another_job())
     # task3=asyncio.create_task(start_client())
-    # await task1
+    await task1
     # await task2
     # await task3
     # async with websockets.serve(on_connect, "0.0.0.0", 8000):
