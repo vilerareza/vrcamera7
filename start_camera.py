@@ -13,7 +13,7 @@ import json
 
 
 # Server host
-serverHost = "192.168.50.102:8000"
+serverHost = "192.168.50.102"
 # Camera object
 camera = Camera()
 # Frame size
@@ -97,7 +97,7 @@ async def ws_to_client():
 
 async def ws_to_server(server_host):
     print ('Opening ws to server')
-    async with websockets.connect(f"ws://{server_host}/ws/device/device1") as websocket:
+    async with websockets.connect(f"ws://{server_host}:8000/ws/device/device1") as websocket:
         while True:
             print ('sending data to server')
             await websocket.send("Hello world!")
