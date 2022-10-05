@@ -13,7 +13,7 @@ import json
 
 
 # Server host
-serverHost = "192.168.50.102"
+serverHost = "192.168.19.102"
 # Camera object
 camera = Camera()
 # Frame size
