@@ -82,7 +82,6 @@ async def on_connect(websocket):
 async def ws_to_client():
     print ('Listening ws from client')
     async with websockets.serve(on_connect, "0.0.0.0", 8000):
-        print ('starting server')
         await asyncio.Future()
 
 async def ws_to_server(server_host):
@@ -96,15 +95,13 @@ async def ws_to_server(server_host):
 
 async def main():
     # Start camera
-    camera.start_camera(output, frame_size = frame_size, frame_rate = frame_rate)
-    task1 = asyncio.create_task(ws_to_server(serverHost))
-    task2 = asyncio.create_task(ws_to_client())
+    task_camera = camera.start_camera(output, frame_size = frame_size, frame_rate = frame_rate)
+    task_ws_server = asyncio.create_task(ws_to_server(serverHost))
+    task_ws_client = asyncio.create_task(ws_to_client())
     #task2=asyncio.create_task(another_job())
-    await task1
-    await task2
-    # await task3
-    # async with websockets.serve(on_connect, "0.0.0.0", 8000):
-    #     await asyncio.Future()
+    await task_camera
+    await task_ws_server
+    await task_ws_client
 
 asyncio.run (main())
 
