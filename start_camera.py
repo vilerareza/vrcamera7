@@ -73,7 +73,7 @@ async def on_connect(websocket):
                     output.condition.wait()
                     frame = output.frame
                     print ('sending')
-                    websocket.send(frame)
+                    await websocket.send(frame)
             except websockets.ConnectionClosedOK:
                 break
 
