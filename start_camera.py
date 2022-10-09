@@ -69,8 +69,8 @@ async def on_connect(websocket):
     async def send(websocket):
         while True:
             try:
-                async with output.condition:
-                    await output.condition.wait()
+                with output.condition:
+                    output.condition.wait()
                     frame = output.frame
                     print ('sending')
                     #websocket.send(frame, opcode=2)
@@ -88,7 +88,6 @@ async def ws_to_server(server_host):
     print ('Opening ws to server')
     async with websockets.connect(f"ws://{server_host}:8000/ws/device/device1/") as websocket:
         while True:
-            #print ('sending data to server')
             # Sending dummy data
             await websocket.send("Hello world!")
             await asyncio.sleep(1)
@@ -104,4 +103,3 @@ async def main():
     await task_ws_client
 
 asyncio.run (main())
-

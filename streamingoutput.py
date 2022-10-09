@@ -1,5 +1,5 @@
 import io
-from asyncio import Condition
+from threading import Condition
 
 class StreamingOutput(object):
     '''
