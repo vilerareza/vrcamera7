@@ -94,7 +94,7 @@ async def ws_to_server(server_host):
 
 async def main():
     # Start camera
-    task_camera = camera.start_camera(output, frame_size = frame_size, frame_rate = frame_rate)
+    task_camera = asyncio.create_task(camera.start_camera(output, frame_size = frame_size, frame_rate = frame_rate))
     task_ws_server = asyncio.create_task(ws_to_server(serverHost))
     task_ws_client = asyncio.create_task(ws_to_client())
     #task2=asyncio.create_task(another_job())
