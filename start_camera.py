@@ -78,7 +78,8 @@ async def on_connect(websocket):
             except websockets.ConnectionClosedOK:
                 break
 
-    await send(websocket)
+    #await send(websocket)
+    await asyncio.to_thread(send, websocket)
 
 async def ws_to_client():
     print ('Listening ws from client')
