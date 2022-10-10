@@ -85,7 +85,7 @@ async def on_connect(websocket):
             except websockets.ConnectionClosedOK:
                 break
 
-    #await send(websocket)
+    await send(websocket)
     # await asyncio.to_thread(send, websocket)
     #newLoop = asyncio.new_event_loop()
     #await asyncio.run_coroutine_threadsafe(await send(websocket), newLoop)
