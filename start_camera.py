@@ -69,12 +69,13 @@ async def on_connect(websocket):
     def wait (condition):
         with condition:
             condition.wait()
+            return output.frame
 
     async def send(websocket):
         while True:
             try:
-                await asyncio.to_thread(wait, output.condition)
-                frame = output.frame
+                frame = await asyncio.to_thread(wait, output.condition)
+                #frame = output.frame
                 #await asyncio.sleep(1)
                 # with output.condition:
                 #     output.condition.wait()
