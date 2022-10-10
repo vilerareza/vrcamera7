@@ -79,7 +79,9 @@ async def on_connect(websocket):
                 break
 
     #await send(websocket)
-    await asyncio.to_thread(send, websocket)
+    # await asyncio.to_thread(send, websocket)
+    newLoop = asyncio.new_event_loop()
+    asyncio.run_coroutine_threadsafe(send, newLoop)
 
 async def ws_to_client():
     print ('Listening ws from client')
