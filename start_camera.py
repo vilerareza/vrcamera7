@@ -66,22 +66,28 @@ async def on_connect(websocket):
     async def receive(websocket):
         pass
     
+    def wait (condition):
+        with condition:
+            condition.wait()
+
     async def send(websocket):
         while True:
             try:
+                await asyncio.to_thread(wait, output.condition)
+                frame = output.frame
                 #await asyncio.sleep(1)
-                with output.condition:
-                    output.condition.wait()
-                    frame = output.frame
+                # with output.condition:
+                #     output.condition.wait()
+                #     frame = output.frame
                     #print ('sending')
-                    await websocket.send(frame)
+                await websocket.send(frame)
             except websockets.ConnectionClosedOK:
                 break
 
     #await send(websocket)
     # await asyncio.to_thread(send, websocket)
-    newLoop = asyncio.new_event_loop()
-    await asyncio.run_coroutine_threadsafe(await send(websocket), newLoop)
+    #newLoop = asyncio.new_event_loop()
+    #await asyncio.run_coroutine_threadsafe(await send(websocket), newLoop)
 
 async def ws_to_client():
     print ('Listening ws from client')
