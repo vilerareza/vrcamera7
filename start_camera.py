@@ -64,6 +64,7 @@ async def on_connect(websocket):
     print ('Client connected')
 
     async def receive(websocket):
+        print ('receive')
         async for message in websocket:
             print (message)
         # while True:
