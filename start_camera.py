@@ -64,7 +64,12 @@ async def on_connect(websocket):
     print ('Client connected')
 
     async def receive(websocket):
-        pass
+        while True:
+            try:
+                message = websocket.recv()
+            except websockets.ConnectionClosedOK:
+                break
+            print (message)
     
     def wait (output):
         with output.condition:
@@ -75,20 +80,13 @@ async def on_connect(websocket):
         while True:
             try:
                 frame = await asyncio.to_thread(wait, output)
-                #frame = output.frame
-                #await asyncio.sleep(1)
-                # with output.condition:
-                #     output.condition.wait()
-                #     frame = output.frame
-                    #print ('sending')
                 await websocket.send(frame)
             except websockets.ConnectionClosedOK:
                 break
 
     await send(websocket)
-    # await asyncio.to_thread(send, websocket)
-    #newLoop = asyncio.new_event_loop()
-    #await asyncio.run_coroutine_threadsafe(await send(websocket), newLoop)
+    await receive(websocket)
+
 
 async def ws_to_client():
     print ('Listening ws from client')
@@ -96,7 +94,7 @@ async def ws_to_client():
         await asyncio.Future()
 
 async def ws_to_server(server_host):
-    print ('Opening ws to server')
+    print ('Opening ws to server...')
     async with websockets.connect(f"ws://{server_host}:8000/ws/device/device1/") as websocket:
         while True:
             # Sending dummy data
@@ -106,9 +104,10 @@ async def ws_to_server(server_host):
 async def main():
     # Start camera
     task_camera = asyncio.create_task(camera.start_camera(output, frame_size = frame_size, frame_rate = frame_rate))
+    # Open connection to server
     task_ws_server = asyncio.create_task(ws_to_server(serverHost))
+    # Listening connection form client
     task_ws_client = asyncio.create_task(ws_to_client())
-    #task2=asyncio.create_task(another_job())
     await task_camera
     await task_ws_server
     await task_ws_client
