@@ -1,6 +1,5 @@
 
 import asyncio
-from asyncio import Condition
 import websockets
 
 from functools import partial
@@ -61,19 +60,16 @@ async def on_message(wsapp, message):
 
 async def on_connect(websocket):
     global output
-    print ('Client connected')
 
     async def receive(websocket):
-        print ('receive')
-        async for message in websocket:
-            print (message)
-        # while True:
-        #     print ('receiving')
-        #     try:
-        #         message = await websocket.recv()
-        #     except websockets.ConnectionClosedOK:
-        #         break
-        #     print (message)
+        while True:
+            try:
+                print ('receive')
+                async for message in websocket:
+                    print (message)
+                #await websocket.recv()
+            except websockets.ConnectionClosedOK:
+                break
     
     def wait (output):
         with output.condition:
@@ -86,15 +82,25 @@ async def on_connect(websocket):
                 frame = await asyncio.to_thread(wait, output)
                 await websocket.send(frame)
                 await websocket.recv()
-
             except websockets.ConnectionClosedOK:
                 break
 
-    await send(websocket)
-    #await receive(websocket)
+    s = websocket.path.split('/')
+    type = s[1]
+    print (f'Client connected, {websocket.path}, {type}')
+
+    if type == 'frame':
+        await send(websocket)
+    elif type == 'control':
+        await receive(websocket)
 
 
-async def ws_to_client():
+async def ws_to_client_control():
+    print ('Listening ws from client')
+    async with websockets.serve(on_connect, "0.0.0.0", 8000):
+        await asyncio.Future()
+
+async def ws_to_client_frame():
     print ('Listening ws from client')
     async with websockets.serve(on_connect, "0.0.0.0", 8000):
         await asyncio.Future()
@@ -113,9 +119,11 @@ async def main():
     # Open connection to server
     task_ws_server = asyncio.create_task(ws_to_server(serverHost))
     # Listening connection form client
-    task_ws_client = asyncio.create_task(ws_to_client())
+    task_ws_client_frame = asyncio.create_task(ws_to_client_frame())
+    task_ws_client_control = asyncio.create_task(ws_to_client_control())
     await task_camera
     await task_ws_server
-    await task_ws_client
+    await task_ws_client_frame
+    await task_ws_client_control
 
 asyncio.run (main())
