@@ -82,12 +82,15 @@ async def on_connect(websocket):
             try:
                 frame = await asyncio.to_thread(wait, output)
                 await websocket.send(frame)
-                await asyncio.sleep(0)
+                
+                async for message in websocket:
+                    print (message)
+
             except websockets.ConnectionClosedOK:
                 break
 
     await send(websocket)
-    await receive(websocket)
+    #await receive(websocket)
 
 
 async def ws_to_client():
