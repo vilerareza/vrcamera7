@@ -81,7 +81,6 @@ async def on_connect(websocket):
             try:
                 frame = await asyncio.to_thread(wait, output)
                 await websocket.send(frame)
-                await websocket.recv()
             except websockets.ConnectionClosedOK:
                 break
 
