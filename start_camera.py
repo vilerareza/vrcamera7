@@ -65,8 +65,9 @@ async def on_connect(websocket):
 
     async def receive(websocket):
         while True:
+            print ('receiving')
             try:
-                message = websocket.recv()
+                message = await websocket.recv()
             except websockets.ConnectionClosedOK:
                 break
             print (message)
