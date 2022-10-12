@@ -62,13 +62,12 @@ async def on_connect(websocket):
     global output
 
     async def receive(websocket):
-        print ('receive')
         while True:
             try:
                 print ('receive')
-                async for message in websocket:
-                    print (message)
-                #await websocket.recv()
+                # async for message in websocket:
+                #     print (message)
+                message = await websocket.recv()
             except websockets.ConnectionClosedOK:
                 break
     
@@ -126,7 +125,7 @@ async def main():
     task_ws_server = asyncio.create_task(ws_to_server(serverHost))
     # Listening connection form client
     task_ws_client_frame = asyncio.create_task(ws_to_client_frame())
-    task_ws_client_control = asyncio.create_task(ws_to_client_control())
+    #task_ws_client_control = asyncio.create_task(ws_to_client_control())
     await task_camera
     await task_ws_server
     await task_ws_client_frame
