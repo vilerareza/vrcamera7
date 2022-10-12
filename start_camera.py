@@ -69,6 +69,7 @@ async def on_connect(websocket):
                     print (message)
                 #message = await websocket.recv()
             except websockets.ConnectionClosedOK:
+                print ('closed')
                 break
     
     def wait (output):
