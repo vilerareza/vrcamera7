@@ -65,9 +65,9 @@ async def on_connect(websocket):
         while True:
             try:
                 print ('receive')
-                # async for message in websocket:
-                #     print (message)
-                message = await websocket.recv()
+                async for message in websocket:
+                    print (message)
+                #message = await websocket.recv()
             except websockets.ConnectionClosedOK:
                 break
     
@@ -91,7 +91,6 @@ async def on_connect(websocket):
     #if type == 'frame':
     #newLoop = asyncio.new_event_loop()
     #asyncio.run_coroutine_threadsafe(receive(websocket), newLoop)
-    print ('receive')
     recv = asyncio.create_task(receive(websocket))
     print ('send')
     await recv
