@@ -93,8 +93,9 @@ async def on_connect(websocket):
     #newLoop = asyncio.new_event_loop()
     #asyncio.run_coroutine_threadsafe(receive(websocket), newLoop)
     print ('receive')
-    await websocket.recv()
+    recv = asyncio.create_task(receive(websocket))
     print ('send')
+    await recv()
     await send(websocket)
     #elif type == 'control':
         #await receive(websocket)
