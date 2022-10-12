@@ -92,7 +92,9 @@ async def on_connect(websocket):
     #if type == 'frame':
     #newLoop = asyncio.new_event_loop()
     #asyncio.run_coroutine_threadsafe(receive(websocket), newLoop)
+    print ('receive')
     await websocket.recv()
+    print ('send')
     await send(websocket)
     #elif type == 'control':
         #await receive(websocket)
