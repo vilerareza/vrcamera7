@@ -84,14 +84,16 @@ async def on_connect(websocket):
             except websockets.ConnectionClosedOK:
                 break
 
-    s = websocket.path.split('/')
-    type = s[1]
-    print (f'Client connected, {websocket.path}, {type}')
+    # s = websocket.path.split('/')
+    # type = s[1]
+    # print (f'Client connected, {websocket.path}, {type}')
 
-    if type == 'frame':
-        await send(websocket)
-    elif type == 'control':
-        await receive(websocket)
+    #if type == 'frame':
+    newLoop = asyncio.new_event_loop()
+    await asyncio.run_coroutine_threadsafe(receive, newLoop)
+    await send(websocket)
+    #elif type == 'control':
+        #await receive(websocket)
 
 
 async def ws_to_client_control():
