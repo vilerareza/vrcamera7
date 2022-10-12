@@ -95,7 +95,7 @@ async def on_connect(websocket):
     print ('receive')
     recv = asyncio.create_task(receive(websocket))
     print ('send')
-    await recv()
+    await recv
     await send(websocket)
     #elif type == 'control':
         #await receive(websocket)
@@ -130,6 +130,6 @@ async def main():
     await task_camera
     await task_ws_server
     await task_ws_client_frame
-    await task_ws_client_control
+    #await task_ws_client_control
 
 asyncio.run (main())
