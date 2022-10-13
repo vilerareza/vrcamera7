@@ -64,7 +64,7 @@ async def on_connect(websocket):
     async def receive(websocket):
         while True:
             try:
-                print ('receive')
+                #print ('receive')
                 #async for message in websocket:
                 message = await websocket.recv()
                 print (message)
@@ -79,7 +79,6 @@ async def on_connect(websocket):
 
     async def send(websocket):
         while True:
-            print ('sending')
             try:
                 frame = await asyncio.to_thread(wait, output)
                 await websocket.send(frame)
