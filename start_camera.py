@@ -1,7 +1,6 @@
 
 import asyncio
 import websockets
-
 from functools import partial
 from camera import Camera
 from streamingoutput import StreamingOutput
@@ -27,35 +26,6 @@ servoY = Servo(channel=1)
 # Light
 light = Light(pin = 17)
 
-# async def on_message(message):
-#     message = json.loads(message)
-#     if message['op'] == 'mv':
-#         # Movement
-#         dir = message['dir']
-#         if dir == 'L':
-#             # Left
-#             Thread(target = partial(servoX.start_move, distance = +(message['dist']))).start()
-#         elif dir == 'R':
-#             # Right
-#             Thread(target = partial(servoX.start_move, distance = -(message['dist']))).start()
-#         elif dir == 'D':
-#             # Down
-#             Thread(target = partial(servoY.start_move, distance = +(message['dist']))).start()
-#         elif dir == 'U':
-#             # Up
-#             Thread(target = partial(servoY.start_move, distance = -(message['dist']))).start()
-#         elif dir == 'C':
-#             # Centering
-#             Thread(target = servoX.center).start()
-#             Thread(target = servoY.center).start()
-            
-#     elif message['op'] == 'lt':
-#         # Light
-#         on = message['on']
-#         if on == True:
-#             Thread(target = light.led_on).start()
-#         else:
-#             Thread(target = light.led_off).start()
 
 def on_message(message):
     message = json.loads(message)
@@ -142,10 +112,8 @@ async def main():
     task_ws_server = asyncio.create_task(ws_to_server(serverHost))
     # Listening connection form client
     task_ws_client = asyncio.create_task(ws_to_client())
-    #task_ws_client_control = asyncio.create_task(ws_to_client_control())
     await task_camera
     await task_ws_server
     await task_ws_client
-    #await task_ws_client_control
 
 asyncio.run (main())
