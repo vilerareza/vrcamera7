@@ -57,7 +57,7 @@ light = Light(pin = 17)
 #         else:
 #             Thread(target = light.led_off).start()
 
-async def on_message(message):
+def on_message(message):
     message = json.loads(message)
     if message['op'] == 'mv':
         # Movement
