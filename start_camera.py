@@ -27,36 +27,65 @@ servoY = Servo(channel=1)
 # Light
 light = Light(pin = 17)
 
-async def on_message(wsapp, message):
+# async def on_message(message):
+#     message = json.loads(message)
+#     if message['op'] == 'mv':
+#         # Movement
+#         dir = message['dir']
+#         if dir == 'L':
+#             # Left
+#             Thread(target = partial(servoX.start_move, distance = +(message['dist']))).start()
+#         elif dir == 'R':
+#             # Right
+#             Thread(target = partial(servoX.start_move, distance = -(message['dist']))).start()
+#         elif dir == 'D':
+#             # Down
+#             Thread(target = partial(servoY.start_move, distance = +(message['dist']))).start()
+#         elif dir == 'U':
+#             # Up
+#             Thread(target = partial(servoY.start_move, distance = -(message['dist']))).start()
+#         elif dir == 'C':
+#             # Centering
+#             Thread(target = servoX.center).start()
+#             Thread(target = servoY.center).start()
+            
+#     elif message['op'] == 'lt':
+#         # Light
+#         on = message['on']
+#         if on == True:
+#             Thread(target = light.led_on).start()
+#         else:
+#             Thread(target = light.led_off).start()
+
+async def on_message(message):
     message = json.loads(message)
     if message['op'] == 'mv':
         # Movement
         dir = message['dir']
         if dir == 'L':
             # Left
-            Thread(target = partial(servoX.start_move, distance = +(message['dist']))).start()
+            servoX.start_move(distance = +(message['dist']))
         elif dir == 'R':
             # Right
-            Thread(target = partial(servoX.start_move, distance = -(message['dist']))).start()
+            servoX.start_move(distance = -(message['dist']))
         elif dir == 'D':
             # Down
-            Thread(target = partial(servoY.start_move, distance = +(message['dist']))).start()
+            servoY.start_move(distance = +(message['dist']))
         elif dir == 'U':
             # Up
-            Thread(target = partial(servoY.start_move, distance = -(message['dist']))).start()
+            servoY.start_move(distance = -(message['dist']))
         elif dir == 'C':
             # Centering
-            Thread(target = servoX.center).start()
-            Thread(target = servoY.center).start()
+            servoX.center()
+            servoY.center()
             
     elif message['op'] == 'lt':
         # Light
         on = message['on']
         if on == True:
-            Thread(target = light.led_on).start()
+            light.led_on()
         else:
-            Thread(target = light.led_off).start()
-
+            light.led_off()
 
 async def on_connect(websocket):
     global output
@@ -64,9 +93,8 @@ async def on_connect(websocket):
     async def receive(websocket):
         while True:
             try:
-                #print ('receive')
-                #async for message in websocket:
                 message = await websocket.recv()
+                on_message(message)
                 print (message)
             except websockets.ConnectionClosedOK:
                 print ('closed')
@@ -91,12 +119,6 @@ async def on_connect(websocket):
 
     if socketType == 'frame':
         await send(websocket)
-        #newLoop = asyncio.new_event_loop()
-        #asyncio.run_coroutine_threadsafe(receive(websocket), newLoop)
-        # recv = asyncio.create_task(receive(websocket))
-        #await recv
-        #taskSend = asyncio.create_task(send(websocket))
-        #await taskSend
     elif socketType == 'control':
         await receive(websocket)
 
