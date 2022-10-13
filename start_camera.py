@@ -90,7 +90,7 @@ async def on_connect(websocket):
     socketType = path[1]
     print (f'Client connected, {websocket.path}, {socketType}')
 
-    if type == 'frame':
+    if socketType == 'frame':
         await send(websocket)
         #newLoop = asyncio.new_event_loop()
         #asyncio.run_coroutine_threadsafe(receive(websocket), newLoop)
@@ -98,7 +98,7 @@ async def on_connect(websocket):
         #await recv
         #taskSend = asyncio.create_task(send(websocket))
         #await taskSend
-    elif type == 'control':
+    elif socketType == 'control':
         await receive(websocket)
 
 async def ws_to_client():
