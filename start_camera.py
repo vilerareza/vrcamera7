@@ -102,6 +102,13 @@ async def ws_to_client():
         await asyncio.Future()
 
 async def ws_to_server(server_host):
+    global output
+
+    def wait (output):
+        with output.condition:
+            output.condition.wait()
+            return output.frame
+
     print ('Opening ws to server...')
     async with websockets.connect(f"ws://{server_host}:8000/ws/device/device1/") as websocket:
         while True:
@@ -109,7 +116,13 @@ async def ws_to_server(server_host):
             data = await websocket.recv()
             # Sending dummy data
             if data == (b'1'):
-                await websocket.send("Hello world!")
+                #await websocket.send("Hello world!")
+                try:
+                    frame = await asyncio.to_thread(wait, output)
+                    await websocket.send(frame)
+                    print ('frame sent')
+                except websockets.ConnectionClosedOK:
+                    break
                 #await asyncio.sleep(1)
 
 async def main():
