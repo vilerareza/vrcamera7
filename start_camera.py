@@ -20,9 +20,11 @@ frame_size = (640, 480)
 frame_rate = 20
 # Streaming output object
 output = StreamingOutput()
+
 # Servos
 servoX = Servo(channel=0)
 servoY = Servo(channel=1)
+
 # Light
 light = Light(pin = 17)
 
@@ -56,6 +58,8 @@ def on_message(message):
             light.led_on()
         else:
             light.led_off()
+
+
 
 async def on_connect(websocket):
     global output
@@ -101,9 +105,12 @@ async def ws_to_server(server_host):
     print ('Opening ws to server...')
     async with websockets.connect(f"ws://{server_host}:8000/ws/device/device1/") as websocket:
         while True:
+            print ('Waiting for signal form server')
+            data = await websocket.recv()
             # Sending dummy data
-            await websocket.send("Hello world!")
-            await asyncio.sleep(1)
+            if data == (b'1'):
+                await websocket.send("Hello world!")
+                #await asyncio.sleep(1)
 
 async def main():
     # Start camera
