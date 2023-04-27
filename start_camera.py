@@ -12,6 +12,7 @@ import json
 
 # Server host
 serverHost = "192.168.124.246"
+t_reconnection = 3
 # Camera object
 camera = Camera()
 # Frame size
@@ -109,21 +110,27 @@ async def ws_to_server(server_host):
             output.condition.wait()
             return output.frame
 
-    print ('Opening ws to server...')
-    async with websockets.connect(f"ws://{server_host}:8000/ws/device/device1/") as websocket:
-        while True:
-            print ('Waiting for signal form server')
-            data = await websocket.recv()
-            # Sending dummy data
-            if data == (b'1'):
-                #await websocket.send("Hello world!")
-                try:
-                    frame = await asyncio.to_thread(wait, output)
-                    await websocket.send(frame)
-                    print ('frame sent')
-                except websockets.ConnectionClosedOK:
-                    break
-                #await asyncio.sleep(1)
+    while True:
+        try:
+            print ('Opening ws to server...')
+            async with websockets.connect(f"ws://{server_host}:8000/ws/device/device1/") as websocket:
+                while True:
+                    print ('Waiting for signal form server')
+                    data = await websocket.recv()
+                    # Sending dummy data
+                    if data == (b'1'):
+                        #await websocket.send("Hello world!")
+                        try:
+                            frame = await asyncio.to_thread(wait, output)
+                            await websocket.send(frame)
+                            print ('frame sent')
+                        except websockets.ConnectionClosedOK:
+                            break
+                        #await asyncio.sleep(1)
+        except:
+            print (f'Some issue on connection to server. Reconnecting in {t_reconnection} sec...')
+            asyncio.sleep(t_reconnection)
+            continue
 
 async def main():
     # Start camera

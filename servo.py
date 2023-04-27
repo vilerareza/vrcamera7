@@ -3,6 +3,7 @@ from functools import partial
 from threading import Thread, Condition
 from adafruit_servokit import ServoKit
 
+
 class Servo():
     # Servo parameter
     moveThread = None
