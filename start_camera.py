@@ -16,7 +16,8 @@ t_reconnection = 3
 # Camera object
 camera = Camera()
 # Frame size
-frame_size = (640, 480)
+#frame_size = (640, 480)
+frame_size = (1280, 720)
 # Frame rate
 frame_rate = 20
 # Streaming output object
