@@ -11,7 +11,7 @@ import json
 
 
 # Server host
-serverHost = "192.168.124.246"
+serverHost = "192.168.36.23"
 t_reconnection = 3
 # Camera object
 camera = Camera()
