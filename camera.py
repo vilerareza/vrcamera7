@@ -1,12 +1,23 @@
+import os
+from datetime import datetime
 import asyncio
 import picamera
 
-class Camera():
-    camera = None
 
-    def record_to_file(self, camera, splitter_port=2, size=(1280, 720), quality=25):
-        file_name = 'test.h264'
-        camera.start_recording(file_name, splitter_port=splitter_port, resize=size, quality=quality)
+class Camera():
+
+    camera = None
+    # Root of recording files
+    recording_root = '../rec/'
+
+    def record_to_file(self, camera, splitter_port=2, size=(1280, 720), quality=30):
+        t_present = datetime.now()
+        # Create a storage folder
+        dir_name = f'{self.recording_root}{t_present.year}/{t_present.month}/{t_present.day}/{t_present.hour}/'
+        os.makedirs(dir_name, exist_ok=True)
+        # Prepare file name
+        file_name = f"{t_present.strftime('%Y_%m_%d_%H_%M_%S')}.h264"
+        camera.start_recording(f'{dir_name}{file_name}', splitter_port=splitter_port, resize=size, quality=quality)
 
     async def start_camera(self, output, frame_size, frame_rate):
         if not self.camera:
