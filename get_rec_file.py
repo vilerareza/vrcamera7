@@ -10,5 +10,4 @@ def get_rec_file(file_path, fps=20):
     out_file = f'{os.path.join(dir_name, file_name)}.mp4'
 
     result = subprocess.run(['MP4Box',
-                    '-add', file_name,
-                    f':fps={fps}', out_file])
+                    '-add', f'{file_name}:fps={fps}', out_file])
