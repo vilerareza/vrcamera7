@@ -1,17 +1,11 @@
-import argparse
+import os
+import subprocess
 
 
-if __name__ == '__main__':
+def get_rec_file(file_name):
 
-    # Argument handler
-    parser = argparse.ArgumentParser()
-    parser.add_argument('--file', type = str, required = True)
+    out_file = f'{os.path.splitext(os.path.split(file_name)[-1])[0]}.mp4'
 
-    # Parsing
-    args = parser.parse_args()
-    # Source
-    input_path = args.input
-    # Output directory
-    out_dir = args.out_dir
-    # Make it if does not exist
-    os.makedirs(out_dir, exist_ok=True)
+    result = subprocess.run(['MP4Box',
+                    '-add', file_name,
+                    ':fps=20', out_file])
