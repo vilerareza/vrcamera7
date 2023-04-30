@@ -4,6 +4,10 @@ import picamera
 class Camera():
     camera = None
 
+    def record_to_file(self, camera, splitter_port=2, size=(1280, 720), quality=25):
+        file_name = 'test.h264'
+        camera.start_recording(file_name, splitter_port=splitter_port, resize=size, quality=quality)
+
     async def start_camera(self, output, frame_size, frame_rate):
         if not self.camera:
             #camera = picamera.PiCamera(resolution='HD', framerate = 30)
@@ -13,7 +17,7 @@ class Camera():
             self.camera.contrast = 0
             self.camera.sharpness = 50
             self.camera.start_recording(output, format='mjpeg')
-            self.camera.start_recording('test_rec.h264', splitter_port=2, resize = (1280, 720), quality=25)
+            self.record_to_file(self.camera)
             print('Camera is started')
         else:
             print('Camera is already started') 
