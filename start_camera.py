@@ -73,7 +73,7 @@ async def on_connect(websocket):
                 on_message(message)
                 print (message)
             except websockets.ConnectionClosedOK:
-                print ('closed')
+                print ('closed receive')
                 break
     
     def wait (output):
@@ -87,6 +87,7 @@ async def on_connect(websocket):
                 frame = await asyncio.to_thread(wait, output)
                 await websocket.send(frame)
             except websockets.ConnectionClosedOK:
+                print ('closed send')
                 break
 
     path = websocket.path.split('/')
@@ -130,7 +131,8 @@ async def ws_to_server(server_host):
                         #await asyncio.sleep(1)
         except:
             print (f'Some issue on connection to server. Reconnecting in {t_reconnection} sec...')
-            asyncio.sleep(t_reconnection)
+            # RV: Please evaluate the implementation of await
+            await asyncio.sleep(t_reconnection)
             continue
 
 async def main():
