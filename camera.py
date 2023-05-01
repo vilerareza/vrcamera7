@@ -11,7 +11,7 @@ class Camera():
     recording_root = '../rec/'
 
 
-    def record_to_file(self, camera, splitter_port=2, size=(1280, 720), quality=30, interval = 10):
+    async def record_to_file(self, camera, splitter_port=2, size=(1280, 720), quality=30, interval = 10):
     
         first_file = True
 
@@ -39,7 +39,7 @@ class Camera():
             self.camera.contrast = 0
             self.camera.sharpness = 50
             self.camera.start_recording(output, format='mjpeg')
-            self.record_to_file(self.camera)
+            await self.record_to_file(self.camera)
             print('Camera is started')
         else:
             print('Camera is already started') 
