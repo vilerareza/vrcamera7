@@ -62,7 +62,6 @@ def on_message(message):
             light.led_off()
 
 
-
 async def on_connect(websocket):
     global output
 
@@ -99,10 +98,12 @@ async def on_connect(websocket):
     elif socketType == 'control':
         await receive(websocket)
 
+
 async def ws_to_client():
     print ('Listening ws from client')
     async with websockets.serve(on_connect, "0.0.0.0", 8000):
         await asyncio.Future()
+
 
 async def ws_to_server(server_host):
     global output
@@ -134,6 +135,7 @@ async def ws_to_server(server_host):
             # RV: Please evaluate the implementation of await
             await asyncio.sleep(t_reconnection)
             continue
+
 
 async def main():
     # Start camera
