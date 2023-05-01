@@ -27,6 +27,7 @@ class Camera():
                 first_file = False
             else:
                 camera.split_recording(f'{dir_name}{file_name}', splitter_port=splitter_port, resize=size, quality=quality)
+            print ('waiting')
             camera.wait_recording(interval, splitter_port=splitter_port)
 
 
