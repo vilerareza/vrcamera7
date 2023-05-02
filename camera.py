@@ -51,9 +51,9 @@ class Camera():
     async def stop_camera(self):
         if self.camera:
             try:
-                #self.camera.stop_recording()
+                self.camera.stop_recording()
                 #self.camera.stop_recording(splitter_port=2)
-                #self.camera.close()
+                # self.camera.close()
                 #self.camera = None
                 status = b'stop_ok'
                 print('Camera is stopped')
