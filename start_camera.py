@@ -1,4 +1,3 @@
-
 import asyncio
 import websockets
 from functools import partial
@@ -32,7 +31,9 @@ light = Light(pin = 17)
 
 
 def on_message(message):
+
     message = json.loads(message)
+    
     if message['op'] == 'mv':
         # Movement
         dir = message['dir']
@@ -60,6 +61,16 @@ def on_message(message):
             light.led_on()
         else:
             light.led_off()
+
+    elif message['op'] == 'st':
+        # Stream
+        start = message['start']
+        if start == True:
+            # Start camera
+            camera.start_camera()
+        else:
+            # Stop camera
+            camera.stop_camera()
 
 
 async def on_connect(websocket):
@@ -97,6 +108,8 @@ async def on_connect(websocket):
         await send(websocket)
     elif socketType == 'control':
         await receive(websocket)
+    elif socketType == 'transfer':
+        pass
 
 
 async def ws_to_client():
