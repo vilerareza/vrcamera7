@@ -70,7 +70,8 @@ async def on_message(message):
             await camera.start_camera()
         else:
             # Stop camera
-            await camera.stop_camera()
+            status = await camera.stop_camera()
+            print (status)
 
 
 async def on_connect(websocket):
@@ -94,6 +95,7 @@ async def on_connect(websocket):
     async def send(websocket):
         while True:
             try:
+                print ('waiting')
                 frame = await asyncio.to_thread(wait, output)
                 await websocket.send(frame)
             except websockets.ConnectionClosedOK:
