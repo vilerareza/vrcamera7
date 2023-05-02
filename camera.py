@@ -53,9 +53,9 @@ class Camera():
             try:
                 self.camera.stop_recording()
                 self.camera.stop_recording(splitter_port=2)
-                self.camera.close()
-                self.camera = None
-                status = b'stop_ok'
+                #self.camera.close()
+                #self.camera = None
+                #status = b'stop_ok'
                 print('Camera is stopped')
             except Exception as e:
                 print (e)
