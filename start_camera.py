@@ -70,10 +70,10 @@ async def on_message(message):
             await camera.start_camera()
         else:
             # Stop camera
-            pass
-            print('pass')
-            #status = await camera.stop_camera()
-            #print (status)
+            #pass
+            #print('pass')
+            status = await camera.stop_camera()
+            print (status)
 
 
 async def on_connect(websocket):
