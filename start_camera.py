@@ -30,7 +30,7 @@ servoY = Servo(channel=1)
 light = Light(pin = 17)
 
 
-def on_message(message):
+async def on_message(message):
 
     message = json.loads(message)
     
@@ -80,7 +80,7 @@ async def on_connect(websocket):
         while True:
             try:
                 message = await websocket.recv()
-                on_message(message)
+                await on_message(message)
                 print (message)
             except websockets.ConnectionClosedOK:
                 print ('closed receive')
