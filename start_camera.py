@@ -81,13 +81,13 @@ async def on_connect(websocket):
 
     async def receive(websocket):
         while True:
-            try:
-                message = await websocket.recv()
-                await on_message(message)
-                print (message)
-            except websockets.ConnectionClosedOK:
-                print ('closed receive')
-                break
+            # try:
+            message = await websocket.recv()
+            await on_message(message)
+            print (message)
+            # except websockets.ConnectionClosedOK:
+            #     print ('closed receive')
+            #     break
     
     def wait (output):
         with output.condition:
