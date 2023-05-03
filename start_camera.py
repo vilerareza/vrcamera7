@@ -164,5 +164,6 @@ async def main():
     await task_camera
     await task_ws_server
     await task_ws_client
+    print ('end')
 
 asyncio.run (main())
