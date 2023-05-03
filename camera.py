@@ -38,6 +38,7 @@ class Camera():
 
 
     async def start_camera(self, output, frame_size, frame_rate):
+        print ('starting camera')
         if not self.camera:
             #camera = picamera.PiCamera(resolution='HD', framerate = 30)
             self.camera = picamera.PiCamera(resolution = frame_size, framerate = frame_rate)
