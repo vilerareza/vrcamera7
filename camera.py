@@ -32,7 +32,7 @@ class Camera():
             else:
                 camera.split_recording(f'{dir_name}{file_name}', splitter_port=splitter_port, resize=size, quality=quality)
             
-            asyncio.sleep(interval)
+            await asyncio.sleep(interval)
             #await asyncio.to_thread(wait_recording)
 
 
