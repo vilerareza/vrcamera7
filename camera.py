@@ -13,7 +13,7 @@ class Camera():
 
     async def record_to_file(self, camera, splitter_port=2, size=(1280, 720), quality=30, interval = 60):
     
-        def wait_recording():
+        async def wait_recording():
             camera.wait_recording(interval, splitter_port=splitter_port)
 
         first_file = True
@@ -31,7 +31,8 @@ class Camera():
             else:
                 camera.split_recording(f'{dir_name}{file_name}', splitter_port=splitter_port, resize=size, quality=quality)
             
-            await asyncio.to_thread(wait_recording)
+            await wait_recording()
+            #await asyncio.to_thread(wait_recording)
 
 
     async def start_camera(self, output, frame_size, frame_rate):
