@@ -9,6 +9,7 @@ class Camera():
     camera = None
     # Root of recording files
     recording_root = '../rec/'
+    recording = True
 
 
     async def record_to_file(self, camera, splitter_port=2, size=(1280, 720), quality=30, interval = 10):
@@ -18,7 +19,7 @@ class Camera():
 
         first_file = True
 
-        while True:
+        while self.recording:
             print ('recording to new file')
             t_present = datetime.now()
             # Create a storage folder
@@ -53,8 +54,8 @@ class Camera():
     async def stop_camera(self):
         if self.camera:
             try:
-                self.camera.stop_recording()
-                #self.camera.stop_recording(splitter_port=2)
+                # self.camera.stop_recording()
+                self.camera.stop_recording(splitter_port=2)
                 # self.camera.close()
                 #self.camera = None
                 status = b'stop_ok'
