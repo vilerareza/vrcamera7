@@ -14,8 +14,8 @@ class Camera():
 
     async def record_to_file(self, camera, splitter_port=2, size=(1280, 720), quality=30, interval = 10):
     
-        async def wait_recording():
-            camera.wait_recording(interval, splitter_port=splitter_port)
+        # async def wait_recording():
+        #     camera.wait_recording(interval, splitter_port=splitter_port)
 
         first_file = True
 
@@ -57,8 +57,8 @@ class Camera():
                 self.camera.stop_recording()
                 self.camera.stop_recording(splitter_port=2)
                 self.recording = False
-                # self.camera.close()
-                #self.camera = None
+                self.camera.close()
+                self.camera = None
                 status = b'stop_ok'
                 print('Camera is stopped')
             except Exception as e:
