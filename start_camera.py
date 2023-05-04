@@ -34,7 +34,7 @@ light = Light(pin = 17)
 # Recording files directory
 rec_path = '../rec/'
 # Recording files directory
-transfer_buffer_path = '../transfer_buff/'
+transfer_buffer_path = '../mp4buff/'
 
 
 async def on_message(message):
