@@ -91,7 +91,7 @@ async def on_message(message):
             files = []
             for root,_,files_ in os.walk(rec_path):
                 for file in files_:
-                    files.append(os.path.join(root, files_))
+                    files.append(os.path.join(root, file))
                     
             get_rec_file(files[0], transfer_buffer_path)
 
