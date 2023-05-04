@@ -94,6 +94,7 @@ async def on_connect(websocket):
                 break
             print ('receiving something')
     
+
     def wait (output):
         with output.condition:
             output.condition.wait()
@@ -122,7 +123,9 @@ async def on_connect(websocket):
             try:
                 frame = await asyncio.to_thread(wait, output)
                 await websocket.send(frame)
-            except websockets.ConnectionClosedOK:
+            #except websockets.ConnectionClosedOK:
+            except Exception as e:
+                print (e)
                 print ('closed send')
                 break
         print ('send done')
