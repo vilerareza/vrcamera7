@@ -82,7 +82,6 @@ async def on_message(message):
 
 async def on_connect(websocket):
     global output
-    global is_recording
 
     async def receive(websocket):
         while True:
@@ -102,6 +101,7 @@ async def on_connect(websocket):
 
 
     async def send(websocket):
+        global is_recording
 
         if not is_recording:
             # If camera is stopped then start it
