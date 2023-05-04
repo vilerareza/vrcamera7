@@ -88,7 +88,11 @@ async def on_message(message):
                 output.condition.notify_all()
 
             # File transfer
-            files = os.listdir(rec_path)
+            files = []
+            for root,_,files_ in os.walk(rec_path):
+                for file in files_:
+                    files.append(os.path.join(root, files_))
+                    
             get_rec_file(files[0], transfer_buffer_path)
 
 
