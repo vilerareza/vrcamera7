@@ -45,6 +45,7 @@ class Camera():
             self.camera.rotation = 0
             self.camera.contrast = 0
             self.camera.sharpness = 50
+            self.recording = True
             self.camera.start_recording(output, format='mjpeg')
             await self.record_to_file(self.camera)
             print('Camera is started')
