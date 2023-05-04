@@ -125,6 +125,7 @@ async def on_connect(websocket):
             except websockets.ConnectionClosedOK:
                 print ('closed send')
                 break
+        print ('send done')
 
     path = websocket.path.split('/')
     socketType = path[1]
