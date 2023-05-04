@@ -21,7 +21,7 @@ frame_size = (1280, 720)
 frame_rate = 20
 # Streaming output object
 output = StreamingOutput()
-is_streaming = True
+is_recording = True
 
 # Servos
 servoX = Servo(channel=0)
@@ -34,7 +34,7 @@ light = Light(pin = 17)
 
 async def on_message(message):
 
-    global is_streaming
+    global is_recording
     message = json.loads(message)
     
     if message['op'] == 'mv':
@@ -74,7 +74,7 @@ async def on_message(message):
         else:
             # Stop camera
             status = await camera.stop_camera()
-            is_streaming = False
+            is_recording = False
             # Notify socket to 
             with output.condition:
                 output.condition.notify_all()
@@ -100,7 +100,17 @@ async def on_connect(websocket):
             return output.frame
 
     async def send(websocket):
-        while is_streaming:
+
+        if not is_recording:
+            # If camera is stopped then start it
+            try:
+                # Start camera
+                task_camera = asyncio.create_task(camera.start_camera(output, frame_size = frame_size, frame_rate = frame_rate))
+                await task_camera
+            except Exception as e:
+                print (e)
+
+        while is_recording:
             try:
                 frame = await asyncio.to_thread(wait, output)
                 await websocket.send(frame)
