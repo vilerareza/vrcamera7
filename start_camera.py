@@ -95,7 +95,7 @@ async def on_message(message):
     elif message['op'] == 'tr':
         # File transfer
         files = os.listdir(rec_path)
-        get_rec_file(files[0], transfer_buffer_path)
+        get_rec_file(os.path.join(rec_path, files[0]), transfer_buffer_path)
         
 
 async def on_connect(websocket):
