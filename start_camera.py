@@ -21,6 +21,7 @@ frame_size = (1280, 720)
 frame_rate = 20
 # Streaming output object
 output = StreamingOutput()
+is_streaming = True
 
 # Servos
 servoX = Servo(channel=0)
@@ -30,8 +31,10 @@ servoY = Servo(channel=1)
 light = Light(pin = 17)
 
 
+
 async def on_message(message):
 
+    global is_streaming
     message = json.loads(message)
     
     if message['op'] == 'mv':
@@ -70,10 +73,11 @@ async def on_message(message):
             await camera.start_camera()
         else:
             # Stop camera
-            #pass
-            #print('pass')
             status = await camera.stop_camera()
-            print (status)
+            is_streaming = False
+            # Notify socket to 
+            with output.condition:
+                output.condition.notify_all()
 
 
 async def on_connect(websocket):
@@ -96,7 +100,7 @@ async def on_connect(websocket):
             return output.frame
 
     async def send(websocket):
-        while True:
+        while is_streaming:
             try:
                 frame = await asyncio.to_thread(wait, output)
                 await websocket.send(frame)
