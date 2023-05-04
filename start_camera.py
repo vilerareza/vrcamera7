@@ -82,6 +82,7 @@ async def on_message(message):
 
 async def on_connect(websocket):
     global output
+    global is_recording
 
     async def receive(websocket):
         while True:
