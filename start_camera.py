@@ -112,6 +112,7 @@ async def on_connect(websocket):
             try:
                 # Start camera
                 # await camera.start_camera(output, frame_size = frame_size, frame_rate = frame_rate)
+                print ('send camera to start')
                 task_camera = asyncio.create_task(camera.start_camera(output, frame_size = frame_size, frame_rate = frame_rate))
                 await task_camera
                 is_recording = True
