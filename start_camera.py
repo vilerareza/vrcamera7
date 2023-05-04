@@ -120,10 +120,10 @@ async def on_connect(websocket):
                 # Start camera
                 # await camera.start_camera(output, frame_size = frame_size, frame_rate = frame_rate)
                 print ('send camera to start')
-                await start_camera()
-                # task_camera = asyncio.create_task(camera.start_camera(output, frame_size = frame_size, frame_rate = frame_rate))
+                # await start_camera()
+                task_camera = asyncio.create_task(camera.start_camera(output, frame_size = frame_size, frame_rate = frame_rate))
                 # await task_camera
-                # is_recording = True
+                is_recording = True
                 print ('send camera started')
                 
             except Exception as e:
