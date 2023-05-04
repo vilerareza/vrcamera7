@@ -75,7 +75,7 @@ async def on_message(message):
             # Stop camera
             status = await camera.stop_camera()
             is_recording = False
-            # Notify socket to 
+            # Notify socket to not waiting the streming output buffer
             with output.condition:
                 output.condition.notify_all()
 
@@ -101,7 +101,10 @@ async def on_connect(websocket):
 
 
     async def send(websocket):
+        global output
         global is_recording
+        global frame_size
+        global frame_rate
 
         if not is_recording:
             # If camera is stopped then start it

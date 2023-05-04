@@ -39,16 +39,20 @@ class Camera():
 
     async def start_camera(self, output, frame_size, frame_rate):
         if not self.camera:
-            #camera = picamera.PiCamera(resolution='HD', framerate = 30)
-            self.camera = picamera.PiCamera(resolution = frame_size, framerate = frame_rate)
-            #self.camera.rotation = 180
-            self.camera.rotation = 0
-            self.camera.contrast = 0
-            self.camera.sharpness = 50
-            self.recording = True
-            self.camera.start_recording(output, format='mjpeg')
-            await self.record_to_file(self.camera)
-            print('Camera is started')
+            try:
+                print ('starting camera')
+                #camera = picamera.PiCamera(resolution='HD', framerate = 30)
+                self.camera = picamera.PiCamera(resolution = frame_size, framerate = frame_rate)
+                #self.camera.rotation = 180
+                self.camera.rotation = 0
+                self.camera.contrast = 0
+                self.camera.sharpness = 50
+                self.recording = True
+                self.camera.start_recording(output, format='mjpeg')
+                await self.record_to_file(self.camera)
+                print('Camera is started')
+            except Exception as e:
+                print (e)
         else:
             print('Camera is already started') 
 
