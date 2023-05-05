@@ -40,9 +40,10 @@ rec_path = '../rec/'
 # Recording files directory
 transfer_buffer_path = '../mp4buf/'
 
-# send_condition
+# Rec file reading sync condition
 condition_send = Condition()
-file_bytes = None
+# Rec file bytes
+rec_file_bytes = None
 
 
 async def on_message(message):
@@ -51,7 +52,7 @@ async def on_message(message):
     global rec_path
     global transfer_buffer_path
     global condition_send
-    global file_bytes
+    global rec_file_bytes
     
     message = json.loads(message)
     
@@ -110,26 +111,21 @@ async def on_message(message):
         # Read the file
         print (os.path.getsize(the_file))
         with open (the_file, 'rb') as file_obj:
-            file_bytes = file_obj.read()
+            rec_file_bytes = file_obj.read()
             with condition_send:
                 condition_send.notify_all()
 
 
-def wait_file_bytes():
-
-    global file_bytes
-
-    with condition_send:
-        condition_send.wait()
-    return file_bytes
-
-
 async def on_connect(websocket):
     
+    # Camera streaming output object
     global output
+    # Websocket for downloading recording file
     global ws_download
-
+    
+    # Async function for control websocket
     async def receive(websocket):
+        
         while True:
             try:
                 message = await websocket.recv()
@@ -138,55 +134,64 @@ async def on_connect(websocket):
             except websockets.ConnectionClosedOK:
                 print ('closed receive')
                 break
-            print ('receiving something')
     
-
-    def wait (output):
-        with output.condition:
-            output.condition.wait()
-            return output.frame
-
-
+    # Async function for streaming websocket
     async def send(websocket):
+        
         global output
         global is_recording
         global frame_size
         global frame_rate
 
+        def __wait (output):
+            with output.condition:
+                output.condition.wait()
+                return output.frame
+
         if not is_recording:
             # If camera is stopped then start it
             try:
-                # Start camera
+                # Start camera (no need to await for this task)
                 task_camera = asyncio.create_task(camera.start_camera(output, frame_size = frame_size, frame_rate = frame_rate))
-                # await task_camera
                 is_recording = True
                 
             except Exception as e:
                 print (e)
 
         while is_recording:
+            # Continue streaming while recording flag is set
             try:
-                frame = await asyncio.to_thread(wait, output)
+                frame = await asyncio.to_thread(__wait, output)
                 await websocket.send(frame)
             except websockets.ConnectionClosedOK:
                 print ('closed send')
                 break
 
-
+    # Async function for download websocket to send rec file to the client app
     async def send_rec_file(websocket):
-        # Send recording file to client app
+    
+        def __wait_file_bytes():
 
-        global condition_send
+            # Rec file sync condition
+            global condition_send
+            # Rec file bytes
+            global rec_file_bytes
+
+            with condition_send:
+                condition_send.wait()
+            return rec_file_bytes
 
         try:
-            # file_bytes = await wait_file_bytes()
-            file_bytes = await asyncio.to_thread(wait_file_bytes)
+            # Wait until the rec file bytes is read and ready to be sent
+            file_bytes = await asyncio.to_thread(__wait_file_bytes)
+            # Send the rec file bytes via download websocket
             await websocket.send(file_bytes)
             print ('rec file sent')
         except websockets.ConnectionClosedOK:
             print ('closed send')
 
 
+    # Determine the type of incoming websocket request
     path = websocket.path.split('/')
     socketType = path[1]
     print (f'Client connected, {websocket.path}, {socketType}')
