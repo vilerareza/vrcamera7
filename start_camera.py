@@ -87,19 +87,14 @@ async def on_message(message):
             with output.condition:
                 output.condition.notify_all()
 
-            # File transfer
-            files = []
-            for root,_,files_ in os.walk(rec_path):
-                for file in files_:
-                    files.append(os.path.join(root, file))
-                    
-            get_rec_file(files[0], transfer_buffer_path)
-
-
     elif message['op'] == 'tr':
         # File transfer
-        files = os.listdir(rec_path)
-        get_rec_file(os.path.join(rec_path, files[0]), transfer_buffer_path)
+        files = []
+        for root,_,files_ in os.walk(rec_path):
+            for file in files_:
+                files.append(os.path.join(root, file))
+                
+        get_rec_file(files[0], transfer_buffer_path)
         
 
 async def on_connect(websocket):
