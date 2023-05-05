@@ -87,7 +87,7 @@ async def on_message(message):
             with output.condition:
                 output.condition.notify_all()
 
-    elif message['op'] == 'tr':
+    elif message['op'] == 'download':
         # File transfer
         files = []
         for root,_,files_ in os.walk(rec_path):
