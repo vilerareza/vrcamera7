@@ -97,6 +97,8 @@ async def on_message(message):
             # Notify socket to not waiting the streaming output buffer
             with output.condition:
                 output.condition.notify_all()
+            with condition_send:
+                condition_send.notify_all()
 
     elif message['op'] == 'download':
         # File transfer
