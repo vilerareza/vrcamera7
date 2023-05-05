@@ -111,16 +111,16 @@ async def on_message(message):
         print (os.path.getsize(the_file))
         with open (the_file, 'rb') as file_obj:
             file_bytes = file_obj.read()
-            with condition_send:
-                condition_send.notify_all()
+            async with condition_send:
+                await condition_send.notify_all()
 
 
 async def wait_file_bytes():
 
     global file_bytes
 
-    with condition_send:
-        condition_send.wait()
+    async with condition_send:
+        await condition_send.wait()
     return file_bytes
 
 
