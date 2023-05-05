@@ -6,7 +6,7 @@ from camera import Camera
 from streamingoutput import StreamingOutput
 from servo import Servo
 from light import Light
-from threading import Thread
+from threading import Thread, Condition
 import json
 from get_rec_file import get_rec_file
 
@@ -41,7 +41,7 @@ rec_path = '../rec/'
 transfer_buffer_path = '../mp4buf/'
 
 # send_condition
-condition_send = asyncio.Condition()
+condition_send = Condition()
 file_bytes = None
 
 
@@ -111,16 +111,16 @@ async def on_message(message):
         print (os.path.getsize(the_file))
         with open (the_file, 'rb') as file_obj:
             file_bytes = file_obj.read()
-            async with condition_send:
-                await condition_send.notify_all()
+            with condition_send:
+                condition_send.notify_all()
 
 
-async def wait_file_bytes():
+def wait_file_bytes():
 
     global file_bytes
 
-    async with condition_send:
-        await condition_send.wait()
+    with condition_send:
+        condition_send.wait()
     return file_bytes
 
 
@@ -179,7 +179,8 @@ async def on_connect(websocket):
         global condition_send
 
         try:
-            file_bytes = await wait_file_bytes()
+            # file_bytes = await wait_file_bytes()
+            file_bytes = await asyncio.to_thread(wait_file_bytes)
             await websocket.send(file_bytes)
             print ('rec file sent')
         except websockets.ConnectionClosedOK:
