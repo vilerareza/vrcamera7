@@ -93,8 +93,14 @@ async def on_message(message):
         for root,_,files_ in os.walk(rec_path):
             for file in files_:
                 files.append(os.path.join(root, file))
-                
-        get_rec_file(files[0], transfer_buffer_path)
+
+        the_file = files[0]
+        # Convert to MP4        
+        get_rec_file(the_file, transfer_buffer_path)
+        # Read the file
+        print (os.path.getsize(the_file))
+        with open (the_file) as file_obj:
+            file_byte = file_obj.read()
         
 
 async def on_connect(websocket):
