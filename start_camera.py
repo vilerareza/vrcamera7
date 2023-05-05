@@ -156,8 +156,8 @@ async def on_connect(websocket):
         await send(websocket)
     elif socketType == 'control':
         await receive(websocket)
-    elif socketType == 'transfer':
-        pass
+    elif socketType == 'download':
+        print ('download websocket created')
 
 
 async def ws_to_client():
