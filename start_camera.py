@@ -99,7 +99,7 @@ async def on_message(message):
         get_rec_file(the_file, transfer_buffer_path)
         # Read the file
         print (os.path.getsize(the_file))
-        with open (the_file) as file_obj:
+        with open (the_file, 'rb') as file_obj:
             file_byte = file_obj.read()
         
 
