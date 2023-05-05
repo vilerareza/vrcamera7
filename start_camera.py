@@ -10,6 +10,7 @@ from threading import Thread
 import json
 from get_rec_file import get_rec_file
 
+
 # Server host
 serverHost = "192.168.36.23"
 t_reconnection = 3
@@ -24,6 +25,9 @@ frame_rate = 20
 output = StreamingOutput()
 is_recording = True
 
+# Websockets
+ws_download = None
+
 # Servos
 servoX = Servo(channel=0)
 servoY = Servo(channel=1)
@@ -36,12 +40,18 @@ rec_path = '../rec/'
 # Recording files directory
 transfer_buffer_path = '../mp4buf/'
 
+# send_condition
+condition_send = asyncio.Condition()
+file_bytes = None
+
 
 async def on_message(message):
 
     global is_recording
     global rec_path
     global transfer_buffer_path
+    global condition_send
+    global file_bytes
     
     message = json.loads(message)
     
@@ -100,11 +110,24 @@ async def on_message(message):
         # Read the file
         print (os.path.getsize(the_file))
         with open (the_file, 'rb') as file_obj:
-            file_byte = file_obj.read()
-        
+            file_bytes = file_obj.read()
+            with condition_send:
+                condition_send.notify_all()
+
+
+async def wait_file_bytes():
+
+    global file_bytes
+
+    with condition_send:
+        condition_send.wait()
+    return file_bytes
+
 
 async def on_connect(websocket):
+    
     global output
+    global ws_download
 
     async def receive(websocket):
         while True:
@@ -149,6 +172,20 @@ async def on_connect(websocket):
                 print ('closed send')
                 break
 
+
+    async def send_rec_file(websocket):
+        # Send recording file to client app
+
+        global condition_send
+
+        try:
+            file_bytes = await wait_file_bytes()
+            await websocket.send(file_bytes)
+            print ('rec file sent')
+        except websockets.ConnectionClosedOK:
+            print ('closed send')
+
+
     path = websocket.path.split('/')
     socketType = path[1]
     print (f'Client connected, {websocket.path}, {socketType}')
@@ -158,7 +195,7 @@ async def on_connect(websocket):
     elif socketType == 'control':
         await receive(websocket)
     elif socketType == 'download':
-        print ('download websocket created')
+        await send_rec_file(websocket)
 
 
 async def ws_to_client():
