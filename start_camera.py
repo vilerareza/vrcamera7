@@ -125,6 +125,17 @@ async def on_message(message):
         with condition_send:
             condition_send.notify_all()
 
+    elif message['op'] == 'rec_info':
+        # Client app request rec file info based on date and time
+
+        files = []
+        for root,_,files_ in os.walk(rec_path):
+            for file in files_:
+                files.append(os.path.join(root, file))
+
+        return files
+
+
 
 async def on_connect(websocket):
     
@@ -139,8 +150,11 @@ async def on_connect(websocket):
         while True:
             try:
                 message = await websocket.recv()
-                await on_message(message)
                 print (message)
+                resp = json.dumps(await on_message(message))
+                if resp:
+                    await websocket.send(resp)
+                
             except websockets.ConnectionClosedOK:
                 print ('closed receive')
                 break
