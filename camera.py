@@ -12,7 +12,7 @@ class Camera():
     recording = True
 
 
-    async def record_to_file(self, camera, splitter_port=2, size=(1280, 720), quality=30, interval = 10):
+    async def record_to_file(self, camera, splitter_port=2, size=(1280, 720), quality=30, interval = 60):
     
         # async def wait_recording():
         #     camera.wait_recording(interval, splitter_port=splitter_port)
