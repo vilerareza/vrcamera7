@@ -101,7 +101,7 @@ async def on_message(message):
                 condition_send.notify_all()
 
     elif message['op'] == 'download':
-        # Client app request rec file download
+        # Client app request recording file download
 
         files = []
         for root,_,files_ in os.walk(rec_path):
@@ -126,14 +126,14 @@ async def on_message(message):
             condition_send.notify_all()
 
     elif message['op'] == 'rec_info':
-        # Client app request rec file info based on date and time
+        # Client app request list of recording files
 
         files = []
         for root,_,files_ in os.walk(rec_path):
             for file in files_:
                 files.append(os.path.join(root, file))
 
-        return files
+        return {'resp_type':'rec_files', 'files':files}
 
 
 
@@ -151,9 +151,10 @@ async def on_connect(websocket):
             try:
                 message = await websocket.recv()
                 print (message)
-                resp = json.dumps(await on_message(message))
+                resp = await on_message(message)
                 if resp:
-                    await websocket.send(resp)
+                    resp_json = json.dumps(resp)
+                    await websocket.send(resp_json)
                 
             except websockets.ConnectionClosedOK:
                 print ('closed receive')
