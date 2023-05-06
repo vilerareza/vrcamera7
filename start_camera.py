@@ -101,21 +101,29 @@ async def on_message(message):
                 condition_send.notify_all()
 
     elif message['op'] == 'download':
-        # File transfer
+        # Client app request rec file download
+
         files = []
         for root,_,files_ in os.walk(rec_path):
             for file in files_:
                 files.append(os.path.join(root, file))
-
         the_file = files[0]
+
         # Convert to MP4        
-        get_rec_file(the_file, transfer_buffer_path)
-        # Read the file
-        print (os.path.getsize(the_file))
-        with open (the_file, 'rb') as file_obj:
-            rec_file_bytes = file_obj.read()
-            with condition_send:
-                condition_send.notify_all()
+        result, mp4file = get_rec_file(the_file, transfer_buffer_path)
+        
+        if result:
+            
+            # Read the file
+            print (os.path.getsize(mp4file))
+            with open (mp4file, 'rb') as file_obj:
+                rec_file_bytes = file_obj.read()
+
+        else:
+            print ('Conversion to mp4 failed. Nothing is transferred...')
+
+        with condition_send:
+            condition_send.notify_all()
 
 
 async def on_connect(websocket):
@@ -239,7 +247,6 @@ async def ws_to_server(server_host):
                         #await asyncio.sleep(1)
         except:
             print (f'Some issue on connection to server. Reconnecting in {t_reconnection} sec...')
-            # RV: Please evaluate the implementation of await
             await asyncio.sleep(t_reconnection)
             continue
 
