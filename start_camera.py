@@ -115,6 +115,17 @@ async def on_message(message):
         
         # the_file = files[0]
 
+
+        def __wait_ws_sending():
+
+            # Download ws sending condition
+            global condition_ws_sending
+
+            with condition_ws_sending:
+                print ('waiting for download ws to complete sending')
+                condition_ws_sending.wait()
+
+
         for file in files:
 
             # Convert to MP4        
@@ -135,9 +146,7 @@ async def on_message(message):
                 condition_file_read.notify_all()
             
             # Check if websocket is still sending. Wait
-            with condition_ws_sending:
-                print ('waiting for download to complete sending')
-                condition_ws_sending.wait()
+            await asyncio.to_thread(__wait_ws_sending, output)
 
 
     elif message['op'] == 'rec_info':
@@ -210,14 +219,15 @@ async def on_connect(websocket):
     # Async function for download websocket to send rec file to the client app
     async def send_rec_file(websocket, n_files):
     
+        # Download websocket sending condition
+        global condition_ws_sending
+        # Rec file bytes
+        global rec_file_dict
+
         def __wait_file_bytes():
 
             # Rec file sync condition
             global condition_file_read
-            # Download websocket sending condition
-            global condition_ws_sending
-            # Rec file bytes
-            global rec_file_dict
 
             with condition_file_read:
                 condition_file_read.wait()
