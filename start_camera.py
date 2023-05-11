@@ -146,7 +146,7 @@ async def on_message(message):
                 condition_file_read.notify_all()
             
             # Check if websocket is still sending. Wait
-            await asyncio.to_thread(__wait_ws_sending, output)
+            await asyncio.to_thread(__wait_ws_sending)
 
 
     elif message['op'] == 'rec_info':
