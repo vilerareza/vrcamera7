@@ -126,7 +126,7 @@ async def on_message(message):
                 with open (mp4file, 'rb') as file_obj:
                     content = file_obj.read()
                     rec_file_dict['filename'] : os.path.split(mp4file)[-1]
-                    rec_file_dict['content'] : base64.b64encode(content).decode('ascii')
+                    rec_file_dict['filebytes'] : base64.b64encode(content).decode('ascii')
 
             else:
                 print ('Conversion to mp4 failed. Nothing is transferred...')
@@ -230,7 +230,7 @@ async def on_connect(websocket):
                 file_dict = await asyncio.to_thread(__wait_file_bytes)
                 # Send the rec file bytes via download websocket
                 if len(file_dict) > 0:
-                    await websocket.send(file_dict)
+                    await websocket.send(json.dumps(file_dict))
                     print ('rec file sent')
                     rec_file_dict.clear()
                 with condition_ws_sending:
