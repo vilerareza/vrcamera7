@@ -210,7 +210,7 @@ async def on_connect(websocket):
                 condition_send.wait()
             return rec_file_bytes
 
-        for i in range (n_files):
+        for i in range (len(n_files)):
             # Send n files
             try:
                 # Wait until the rec file bytes is read and ready to be sent
