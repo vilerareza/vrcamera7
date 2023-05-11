@@ -9,6 +9,7 @@ from light import Light
 from threading import Thread, Condition
 import json
 from get_rec_file import get_rec_file
+import base64
 
 
 # Server host
@@ -41,9 +42,10 @@ rec_path = '../rec/'
 transfer_buffer_path = '../mp4buf/'
 
 # Rec file reading sync condition
-condition_send = Condition()
+condition_file_read = Condition()
+condition_ws_sending = Condition()
 # Rec file bytes
-rec_file_bytes = None
+rec_file_dict = {}
 
 
 async def on_message(message):
@@ -51,8 +53,8 @@ async def on_message(message):
     global is_recording
     global rec_path
     global transfer_buffer_path
-    global condition_send
-    global rec_file_bytes
+    global condition_file_read
+    global rec_file_dict
     
     message = json.loads(message)
     
@@ -97,8 +99,10 @@ async def on_message(message):
             # Notify socket to not waiting the streaming output buffer
             with output.condition:
                 output.condition.notify_all()
-            with condition_send:
-                condition_send.notify_all()
+            with condition_file_read:
+                condition_file_read.notify_all()
+            with condition_ws_sending:
+                condition_ws_sending.notify_all()
 
     elif message['op'] == 'download':
         # Client app request recording file download
@@ -120,13 +124,20 @@ async def on_message(message):
                 # Read the file
                 print (os.path.getsize(mp4file))
                 with open (mp4file, 'rb') as file_obj:
-                    rec_file_bytes = file_obj.read()
+                    content = file_obj.read()
+                    rec_file_dict['filename'] : os.path.split(mp4file)[-1]
+                    rec_file_dict['content'] : base64.b64encode(content).decode('ascii')
 
             else:
                 print ('Conversion to mp4 failed. Nothing is transferred...')
 
-            with condition_send:
-                condition_send.notify_all()
+            with condition_file_read:
+                condition_file_read.notify_all()
+            
+            # Check if websocket is still sending. Wait
+            with condition_ws_sending:
+                print ('waiting for download to complete sending')
+                condition_ws_sending.wait()
 
 
     elif message['op'] == 'rec_info':
@@ -202,23 +213,29 @@ async def on_connect(websocket):
         def __wait_file_bytes():
 
             # Rec file sync condition
-            global condition_send
+            global condition_file_read
+            # Download websocket sending condition
+            global condition_ws_sending
             # Rec file bytes
-            global rec_file_bytes
+            global rec_file_dict
 
-            with condition_send:
-                condition_send.wait()
-            return rec_file_bytes
+            with condition_file_read:
+                condition_file_read.wait()
+            return rec_file_dict
 
         for i in range (len(n_files)):
             # Send n files
             try:
                 # Wait until the rec file bytes is read and ready to be sent
-                file_bytes = await asyncio.to_thread(__wait_file_bytes)
+                file_dict = await asyncio.to_thread(__wait_file_bytes)
                 # Send the rec file bytes via download websocket
-                if file_bytes:
-                    await websocket.send(file_bytes)
+                if len(file_dict) > 0:
+                    await websocket.send(file_dict)
                     print ('rec file sent')
+                    rec_file_dict.clear()
+                with condition_ws_sending:
+                    condition_ws_sending.notify_all()
+
             except websockets.ConnectionClosedOK:
                 print ('websocket download closed')
                 break
