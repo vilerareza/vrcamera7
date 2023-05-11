@@ -103,27 +103,31 @@ async def on_message(message):
     elif message['op'] == 'download':
         # Client app request recording file download
 
-        files = []
-        for root,_,files_ in os.walk(rec_path):
-            for file in files_:
-                files.append(os.path.join(root, file))
-        the_file = files[0]
+        files = message['files']
 
-        # Convert to MP4        
-        result, mp4file = get_rec_file(the_file, transfer_buffer_path)
+        # for root,_,files_ in os.walk(rec_path):
+        #     for file in files_:
+        #         files.append(os.path.join(root, file))
         
-        if result:
+        # the_file = files[0]
+
+        for file in files:
+
+            # Convert to MP4        
+            result, mp4file = get_rec_file(file, transfer_buffer_path)
             
-            # Read the file
-            print (os.path.getsize(mp4file))
-            with open (mp4file, 'rb') as file_obj:
-                rec_file_bytes = file_obj.read()
+            if result:    
+                # Read the file
+                print (os.path.getsize(mp4file))
+                with open (mp4file, 'rb') as file_obj:
+                    rec_file_bytes = file_obj.read()
 
-        else:
-            print ('Conversion to mp4 failed. Nothing is transferred...')
+            else:
+                print ('Conversion to mp4 failed. Nothing is transferred...')
 
-        with condition_send:
-            condition_send.notify_all()
+            with condition_send:
+                condition_send.notify_all()
+
 
     elif message['op'] == 'rec_info':
         # Client app request list of recording files
@@ -193,7 +197,7 @@ async def on_connect(websocket):
                 break
 
     # Async function for download websocket to send rec file to the client app
-    async def send_rec_file(websocket):
+    async def send_rec_file(websocket, n_files):
     
         def __wait_file_bytes():
 
@@ -206,14 +210,18 @@ async def on_connect(websocket):
                 condition_send.wait()
             return rec_file_bytes
 
-        try:
-            # Wait until the rec file bytes is read and ready to be sent
-            file_bytes = await asyncio.to_thread(__wait_file_bytes)
-            # Send the rec file bytes via download websocket
-            await websocket.send(file_bytes)
-            print ('rec file sent')
-        except websockets.ConnectionClosedOK:
-            print ('closed send')
+        for i in range (n_files):
+            # Send n files
+            try:
+                # Wait until the rec file bytes is read and ready to be sent
+                file_bytes = await asyncio.to_thread(__wait_file_bytes)
+                # Send the rec file bytes via download websocket
+                if file_bytes:
+                    await websocket.send(file_bytes)
+                    print ('rec file sent')
+            except websockets.ConnectionClosedOK:
+                print ('websocket download closed')
+                break
 
 
     # Determine the type of incoming websocket request
@@ -226,7 +234,8 @@ async def on_connect(websocket):
     elif socketType == 'control':
         await receive(websocket)
     elif socketType == 'download':
-        await send_rec_file(websocket)
+        n_files = path[2]
+        await send_rec_file(websocket, n_files)
 
 
 async def ws_to_client():
