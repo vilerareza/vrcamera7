@@ -291,6 +291,7 @@ async def on_connect(websocket):
                     rec_file_dict['filename'] : os.path.split(mp4file)[-1]
                     rec_file_dict['filebytes'] : base64.b64encode(content).decode('ascii')
                     msg = json.dumps(rec_file_dict)
+                    print (msg)
                     await websocket.send(msg)
                     print ('rec file sent')
                     rec_file_dict.clear()
