@@ -160,6 +160,50 @@ async def on_message(message):
         return {'resp_type':'rec_files', 'files':files}
 
 
+async def on_download_request(message):
+
+    global is_recording
+    global rec_path
+    global transfer_buffer_path
+    global condition_file_read
+    global rec_file_dict
+    
+    message = json.loads(message)
+    
+    if message['op'] == 'download':
+        # Client app request recording file download
+
+        files = message['files']
+        mp4_files = []
+
+        for file in files:
+
+            # Convert to MP4        
+            result, mp4file = get_rec_file(file, transfer_buffer_path)
+            print (os.path.getsize(mp4file))
+
+            # with open (mp4file, 'rb') as file_obj:
+            #     content = file_obj.read()
+            #     rec_file_dict['filename'] : os.path.split(mp4file)[-1]
+            #     rec_file_dict['filebytes'] : base64.b64encode(content).decode('ascii')
+            
+            mp4_files.append(mp4file)
+
+        return mp4_files
+            # if result:    
+            #     # Read the file
+            #     print (os.path.getsize(mp4file))
+            #     with open (mp4file, 'rb') as file_obj:
+            #         content = file_obj.read()
+            #         rec_file_dict['filename'] : os.path.split(mp4file)[-1]
+            #         rec_file_dict['filebytes'] : base64.b64encode(content).decode('ascii')
+
+            # else:
+            #     print ('Conversion to mp4 failed. Nothing is transferred...')
+
+            # with condition_file_read:
+            #     condition_file_read.notify_all()
+
 
 async def on_connect(websocket):
     
@@ -233,18 +277,21 @@ async def on_connect(websocket):
                 condition_file_read.wait()
             return rec_file_dict
 
-        for i in range (len(n_files)):
+
+        message = await websocket.recv()
+        print (message)
+        mp4_files = await on_download_request(message)
+
+        for mp4file in range (len(mp4_files)):
             # Send n files
             try:
-                # Wait until the rec file bytes is read and ready to be sent
-                file_dict = await asyncio.to_thread(__wait_file_bytes)
-                # Send the rec file bytes via download websocket
-                if len(file_dict) > 0:
-                    await websocket.send(json.dumps(file_dict))
+                with open (mp4file, 'rb') as file_obj:
+                    content = file_obj.read()
+                    rec_file_dict['filename'] : os.path.split(mp4file)[-1]
+                    rec_file_dict['filebytes'] : base64.b64encode(content).decode('ascii')
+                    await websocket.send(json.dumps(rec_file_dict))
                     print ('rec file sent')
                     rec_file_dict.clear()
-                # with condition_ws_sending:
-                #     condition_ws_sending.notify_all()
 
             except websockets.ConnectionClosedOK:
                 print ('websocket download closed')
