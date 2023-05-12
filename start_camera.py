@@ -146,7 +146,7 @@ async def on_message(message):
                 condition_file_read.notify_all()
             
             # Check if websocket is still sending. Wait
-            await asyncio.to_thread(__wait_ws_sending)
+            # await asyncio.to_thread(__wait_ws_sending)
 
 
     elif message['op'] == 'rec_info':
@@ -243,8 +243,8 @@ async def on_connect(websocket):
                     await websocket.send(json.dumps(file_dict))
                     print ('rec file sent')
                     rec_file_dict.clear()
-                with condition_ws_sending:
-                    condition_ws_sending.notify_all()
+                # with condition_ws_sending:
+                #     condition_ws_sending.notify_all()
 
             except websockets.ConnectionClosedOK:
                 print ('websocket download closed')
