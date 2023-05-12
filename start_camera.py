@@ -282,7 +282,7 @@ async def on_connect(websocket):
         print (message)
         mp4_files = await on_download_request(message)
 
-        for mp4file in range (len(mp4_files)):
+        for mp4file in mp4_files:
             print (f'sending {mp4file}')
             # Send n files
             try:
