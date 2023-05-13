@@ -201,35 +201,37 @@ async def on_connect(websocket):
         finally:
             print('Files on mp4 buffer are cleared...')
 
-        # Wait to receive download start command
-        message = await websocket.recv()
-        print (message)
-        # Convert requested files to mp4 and return list of mp4 paths.
-        mp4_files = await on_download_request(message)
-
-        # Send each mp4 files
-        for mp4file in mp4_files:
-            print (f'sending {mp4file}')
+        while True:
 
             try:
-                with open (mp4file, 'rb') as file_obj:
-                    content = file_obj.read()
-                    # Creating dictionary for file to be sent
-                    rec_file_dict['filename'] = os.path.split(mp4file)[-1]
-                    rec_file_dict['filebytes'] = base64.b64encode(content).decode('ascii')
-                    msg = json.dumps(rec_file_dict)
-                    # Send the file
-                    await websocket.send(msg)
-                    print (f'{mp4file} sent')
-                    rec_file_dict.clear()
+                # Wait to receive download start command
+                message = await websocket.recv()
+                print (message)
+                # Convert requested files to mp4 and return list of mp4 paths.
+                mp4_files = await on_download_request(message)
+
+                # Send each mp4 files
+                for mp4file in mp4_files:
+                    print (f'sending {mp4file}')
+
+                    with open (mp4file, 'rb') as file_obj:
+                        content = file_obj.read()
+                        # Creating dictionary for file to be sent
+                        rec_file_dict['filename'] = os.path.split(mp4file)[-1]
+                        rec_file_dict['filebytes'] = base64.b64encode(content).decode('ascii')
+                        msg = json.dumps(rec_file_dict)
+                        # Send the file
+                        await websocket.send(msg)
+                        print (f'{mp4file} sent')
+                        rec_file_dict.clear()
+                
+                # Clean all mp4 files
+                for mp4file in mp4_files:
+                    os.remove(mp4file)
 
             except websockets.ConnectionClosedOK:
                 print ('websocket download closed')
                 break
-
-        # Clean all mp4 files
-        for mp4file in mp4_files:
-            os.remove(mp4file)
 
 
     # Determine the type of incoming websocket request
