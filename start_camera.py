@@ -195,7 +195,7 @@ async def on_connect(websocket):
             prev_mp4_files = os.listdir(mp4_buffer_path)
             if len(prev_mp4_files) > 0:
                 for file in prev_mp4_files:
-                    os.path.remove(os.path.join(prev_mp4_files, file))
+                    os.remove(os.path.join(prev_mp4_files, file))
         except Exception as e:
             print (e)
         finally:
