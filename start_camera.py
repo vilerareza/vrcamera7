@@ -185,14 +185,29 @@ async def on_connect(websocket):
     # Async function for download websocket to send rec file to the client app
     async def send_rec_file(websocket, n_files):
     
+        # MP4 buffer location
+        global mp4_buffer_path
         # Rec file bytes
         global rec_file_dict
 
+        # Ensure the previous mp4 files are cleaned
+        try: 
+            prev_mp4_files = os.listdir(mp4_buffer_path)
+            if len(prev_mp4_files) > 0:
+                for file in prev_mp4_files:
+                    os.path.remove(os.path.join(prev_mp4_files, file))
+        except Exception as e:
+            print (e)
+        finally:
+            print('Files on mp4 buffer are cleared...')
+
+        # Wait to receive download start command
         message = await websocket.recv()
         print (message)
         # Convert requested files to mp4 and return list of mp4 paths.
         mp4_files = await on_download_request(message)
 
+        # Send each mp4 files
         for mp4file in mp4_files:
             print (f'sending {mp4file}')
 
@@ -211,6 +226,10 @@ async def on_connect(websocket):
             except websockets.ConnectionClosedOK:
                 print ('websocket download closed')
                 break
+
+        # Clean all mp4 files
+        for mp4file in mp4_files:
+            os.remove(mp4file)
 
 
     # Determine the type of incoming websocket request
