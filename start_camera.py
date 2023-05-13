@@ -26,9 +26,6 @@ frame_rate = 20
 output = StreamingOutput()
 is_recording = True
 
-# Websockets
-ws_download = None
-
 # Servos
 servoX = Servo(channel=0)
 servoY = Servo(channel=1)
@@ -39,21 +36,17 @@ light = Light(pin = 17)
 # Recording files directory
 rec_path = '../rec/'
 # Recording files directory
-transfer_buffer_path = '../mp4buf/'
-
-# Rec file reading sync condition
-condition_file_read = Condition()
-condition_ws_sending = Condition()
+mp4_buffer_path = '../mp4buf/'
 # Rec file bytes
 rec_file_dict = {}
 
 
-async def on_message(message):
+async def on_control(message):
+    # Callback function for control message receved by control websocket
 
     global is_recording
     global rec_path
-    global transfer_buffer_path
-    global condition_file_read
+    global mp4_buffer_path
     global rec_file_dict
     
     message = json.loads(message)
@@ -99,55 +92,6 @@ async def on_message(message):
             # Notify socket to not waiting the streaming output buffer
             with output.condition:
                 output.condition.notify_all()
-            with condition_file_read:
-                condition_file_read.notify_all()
-            with condition_ws_sending:
-                condition_ws_sending.notify_all()
-
-    elif message['op'] == 'download':
-        # Client app request recording file download
-
-        files = message['files']
-
-        # for root,_,files_ in os.walk(rec_path):
-        #     for file in files_:
-        #         files.append(os.path.join(root, file))
-        
-        # the_file = files[0]
-
-
-        def __wait_ws_sending():
-
-            # Download ws sending condition
-            global condition_ws_sending
-
-            with condition_ws_sending:
-                print ('waiting for download ws to complete sending')
-                condition_ws_sending.wait()
-
-
-        for file in files:
-
-            # Convert to MP4        
-            result, mp4file = get_rec_file(file, transfer_buffer_path)
-            
-            if result:    
-                # Read the file
-                print (os.path.getsize(mp4file))
-                with open (mp4file, 'rb') as file_obj:
-                    content = file_obj.read()
-                    rec_file_dict['filename'] : os.path.split(mp4file)[-1]
-                    rec_file_dict['filebytes'] : base64.b64encode(content).decode('ascii')
-
-            else:
-                print ('Conversion to mp4 failed. Nothing is transferred...')
-
-            with condition_file_read:
-                condition_file_read.notify_all()
-            
-            # Check if websocket is still sending. Wait
-            # await asyncio.to_thread(__wait_ws_sending)
-
 
     elif message['op'] == 'rec_info':
         # Client app request list of recording files
@@ -161,56 +105,34 @@ async def on_message(message):
 
 
 async def on_download_request(message):
+    # Callback function for download request from download websocket
+    # Get list of path for requested files
+    # Convert requested h264 files to mp4
+    # Return list of mp4 file paths
 
-    global is_recording
-    global rec_path
-    global transfer_buffer_path
-    global condition_file_read
-    global rec_file_dict
+    global mp4_buffer_path
     
     message = json.loads(message)
     
     if message['op'] == 'download':
         # Client app request recording file download
-
+        # Get list of files to be sent
         files = message['files']
+        # Placeholder for mp4 file paths
         mp4_files = []
 
         for file in files:
-
             # Convert to MP4        
-            result, mp4file = get_rec_file(file, transfer_buffer_path)
-            print (os.path.getsize(mp4file))
-
-            # with open (mp4file, 'rb') as file_obj:
-            #     content = file_obj.read()
-            #     rec_file_dict['filename'] : os.path.split(mp4file)[-1]
-            #     rec_file_dict['filebytes'] : base64.b64encode(content).decode('ascii')
-            
+            result, mp4file = get_rec_file(file, mp4_buffer_path)            
             mp4_files.append(mp4file)
-
+            
         return mp4_files
-            # if result:    
-            #     # Read the file
-            #     print (os.path.getsize(mp4file))
-            #     with open (mp4file, 'rb') as file_obj:
-            #         content = file_obj.read()
-            #         rec_file_dict['filename'] : os.path.split(mp4file)[-1]
-            #         rec_file_dict['filebytes'] : base64.b64encode(content).decode('ascii')
-
-            # else:
-            #     print ('Conversion to mp4 failed. Nothing is transferred...')
-
-            # with condition_file_read:
-            #     condition_file_read.notify_all()
 
 
 async def on_connect(websocket):
     
     # Camera streaming output object
     global output
-    # Websocket for downloading recording file
-    global ws_download
     
     # Async function for control websocket
     async def receive(websocket):
@@ -219,7 +141,7 @@ async def on_connect(websocket):
             try:
                 message = await websocket.recv()
                 print (message)
-                resp = await on_message(message)
+                resp = await on_control(message)
                 if resp:
                     resp_json = json.dumps(resp)
                     await websocket.send(resp_json)
@@ -263,38 +185,27 @@ async def on_connect(websocket):
     # Async function for download websocket to send rec file to the client app
     async def send_rec_file(websocket, n_files):
     
-        # Download websocket sending condition
-        global condition_ws_sending
         # Rec file bytes
         global rec_file_dict
 
-        def __wait_file_bytes():
-
-            # Rec file sync condition
-            global condition_file_read
-
-            with condition_file_read:
-                condition_file_read.wait()
-            return rec_file_dict
-
-
         message = await websocket.recv()
         print (message)
+        # Convert requested files to mp4 and return list of mp4 paths.
         mp4_files = await on_download_request(message)
 
         for mp4file in mp4_files:
             print (f'sending {mp4file}')
-            # Send n files
+
             try:
                 with open (mp4file, 'rb') as file_obj:
                     content = file_obj.read()
+                    # Creating dictionary for file to be sent
                     rec_file_dict['filename'] = os.path.split(mp4file)[-1]
                     rec_file_dict['filebytes'] = base64.b64encode(content).decode('ascii')
                     msg = json.dumps(rec_file_dict)
-                    #print (rec_file_dict)
-                    #print (msg)
+                    # Send the file
                     await websocket.send(msg)
-                    print ('rec file sent')
+                    print (f'{mp4file} sent')
                     rec_file_dict.clear()
 
             except websockets.ConnectionClosedOK:
