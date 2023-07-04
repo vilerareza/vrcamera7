@@ -3,14 +3,19 @@ import asyncio
 from indicator import Indicator
 
 blue_indicator = Indicator(pin=17)
+indicator_off = False
 
 async def blink_indicator(indicator):
-    indicator.on()
-    asyncio.sleep(3)
-    indicator.off()
+    global indicator_off
+    while not indicator_off:
+        indicator.on()
+        await asyncio.sleep(3)
+        indicator.off()
 
 async def stop_indicator(indicator, timeout):
-    asyncio.sleep(timeout)
+    global indicator_off
+    await asyncio.sleep(timeout)
+    indicator_off = True
     indicator.off()
 
 
@@ -22,5 +27,5 @@ async def main():
     await task_blink_indicator
     await task_stop_indicator
     print ('end')
-
+# 
 asyncio.run (main())
