@@ -11,6 +11,7 @@ async def blink_indicator(indicator):
         indicator.on()
         await asyncio.sleep(3)
         indicator.off()
+        await asyncio.sleep(3)
 
 async def stop_indicator(indicator, timeout):
     global indicator_off
