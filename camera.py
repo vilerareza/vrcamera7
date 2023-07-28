@@ -12,6 +12,10 @@ class Camera():
     recording = True
 
 
+    def __init__(self, indicators) -> None:
+        self.on_indicator = indicators[0]
+        self.error_indicator = indicators[1]
+
     async def record_to_file(self, camera, splitter_port=2, size=(1280, 720), quality=30, interval = 60):
     
         # async def wait_recording():
@@ -49,10 +53,15 @@ class Camera():
                 self.camera.sharpness = 50
                 self.recording = True
                 self.camera.start_recording(output, format='mjpeg')
-                await self.record_to_file(self.camera)
+                self.on_indicator.on()
+                self.error_indicator.off()
                 print('Camera is started')
+                await self.record_to_file(self.camera)
             except Exception as e:
+                self.on_indicator.off()
+                self.error_indicator.on()
                 print (e)
+
         else:
             print('Camera is already started') 
 
@@ -65,9 +74,13 @@ class Camera():
                 self.recording = False
                 self.camera.close()
                 self.camera = None
+                self.on_indicator.off()
+                self.error_indicator.on()
                 status = b'stop_ok'
                 print('Camera is stopped')
             except Exception as e:
+                self.on_indicator.off()
+                self.error_indicator.on()
                 print (e)
         else:
             print('Camera already stopped')
