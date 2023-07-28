@@ -1,7 +1,7 @@
 import os
 from datetime import datetime
 import asyncio
-import picamera2 as picamera
+import picamera2 as picamera2
 
 
 class Camera():
@@ -46,7 +46,7 @@ class Camera():
             try:
                 print ('starting camera')
                 #camera = picamera.PiCamera(resolution='HD', framerate = 30)
-                self.camera = picamera.PiCamera(resolution = frame_size, framerate = frame_rate)
+                self.camera = picamera2.PiCamera2(resolution = frame_size, framerate = frame_rate)
                 #self.camera.rotation = 180
                 self.camera.rotation = 0
                 self.camera.contrast = 0
