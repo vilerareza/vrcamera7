@@ -15,13 +15,7 @@ import base64
 # Server host
 serverHost = "192.168.36.23"
 t_reconnection = 3
-# Camera object
-camera = Camera()
-# Frame size
-#frame_size = (640, 480)
-frame_size = (1280, 720)
-# Frame rate
-frame_rate = 20
+
 # Streaming output object
 output = StreamingOutput()
 is_recording = True
@@ -30,8 +24,8 @@ is_recording = True
 light = Light(pin = 17)
 
 # Indicators
-indicator_1 = Indicator(pin = 22)
-indicator_2 = Indicator(pin = 27)
+indicator_0 = Indicator(pin = 22)
+indicator_1 = Indicator(pin = 27)
 
 # Recording files directory
 rec_path = '../rec/'
@@ -39,6 +33,14 @@ rec_path = '../rec/'
 mp4_buffer_path = '../mp4buf/'
 # Rec file bytes
 rec_file_dict = {}
+
+# Camera object
+camera = Camera([indicator_1, indicator_0])
+# Frame size
+#frame_size = (640, 480)
+frame_size = (1280, 720)
+# Frame rate
+frame_rate = 20
 
 
 async def on_control(message):
