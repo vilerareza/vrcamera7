@@ -1,7 +1,7 @@
 import os
 from datetime import datetime
 import asyncio
-import picamera2
+import picamera2 as picamera
 
 
 class Camera():
