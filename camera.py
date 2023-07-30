@@ -75,6 +75,7 @@ class Camera():
             # self.camera.start()
             self.recording = True
             output_ = picamera2.outputs.Output(output)
+            print('Camera is started')
             self.camera.start_recording(encoder, output_)
             print('Camera is started')
             # await self.record_to_file(self.camera)
