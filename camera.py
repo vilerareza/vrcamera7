@@ -1,7 +1,7 @@
 import os
 from datetime import datetime
 import asyncio
-import picamera2 as picamera2
+import picamera2
 
 
 class Camera():
@@ -45,18 +45,39 @@ class Camera():
         if not self.camera:
             try:
                 print ('starting camera')
-                #camera = picamera.PiCamera(resolution='HD', framerate = 30)
-                self.camera = picamera2.Picamera2(resolution = frame_size, framerate = frame_rate)
-                #self.camera.rotation = 180
-                self.camera.rotation = 0
-                self.camera.contrast = 0
-                self.camera.sharpness = 50
+
+                '''Picamera ver 1'''
+                # camera = picamera.PiCamera(resolution='HD', framerate = 30)
+                # self.camera = picamera.Picamera(resolution = frame_size, framerate = frame_rate)
+                # self.camera.rotation = 180
+                # self.camera.rotation = 0
+                # self.camera.contrast = 0
+                # self.camera.sharpness = 50
+                # self.recording = True
+                # self.camera.start_recording(output, format='mjpeg')
+                # self.on_indicator.on()
+                # self.error_indicator.off()
+
+                ''' Picamera ver 2'''
+                self.camera = picamera2.Picamera2()
+                
+                # Setting configuration object
+                config = self.camera.create_video_configuration(
+                    main={"size": frame_size, "format": "BGR888"},
+                    controls={'FrameRate': frame_rate})
+                self.camera.align_configuration(config)
+                # Applying configuration
+                self.camera.configure(config)
+                # Setting the controls
+                self.camera.set_controls({'Sharpness': 8})
+                # Starting the camera
+                encoder = picamera2.encoders.MJPEGEncoder()
+                # self.camera.start()
                 self.recording = True
-                self.camera.start_recording(output, format='mjpeg')
-                self.on_indicator.on()
-                self.error_indicator.off()
+                self.camera.start_recording(encoder, output)
                 print('Camera is started')
-                await self.record_to_file(self.camera)
+                # await self.record_to_file(self.camera)
+
             except Exception as e:
                 self.on_indicator.off()
                 self.error_indicator.on()
