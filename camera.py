@@ -74,7 +74,7 @@ class Camera():
                 encoder = picamera2.encoders.MJPEGEncoder()
                 # self.camera.start()
                 self.recording = True
-                output_ = picamera2.outputs.FileOutputs(output)
+                output_ = picamera2.outputs.FileOutput(output)
                 self.camera.start_recording(encoder, output_)
                 print('Camera is started')
                 # await self.record_to_file(self.camera)
