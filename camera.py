@@ -82,8 +82,7 @@ class Camera():
             except Exception as e:
                 self.on_indicator.off()
                 self.error_indicator.on()
-                print ('Error')
-                print (e)
+                print (f'Error {e}')
 
         else:
             print('Camera is already started') 
