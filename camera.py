@@ -81,6 +81,7 @@ class Camera():
             except Exception as e:
                 self.on_indicator.off()
                 self.error_indicator.on()
+                print ('Error')
                 print (e)
 
         else:
