@@ -1,7 +1,8 @@
 import os
 from datetime import datetime
 import asyncio
-import picamera2
+#import picamera2
+import picamera
 
 
 class Camera():
@@ -59,27 +60,27 @@ class Camera():
                 # self.error_indicator.off()
 
                 ''' Picamera ver 2'''
-                self.camera = picamera2.Picamera2()
+                # self.camera = picamera2.Picamera2()
                 
-                # Setting configuration object
-                config = self.camera.create_video_configuration(
-                    main={"size": frame_size, "format": "BGR888"},
-                    controls={'FrameRate': frame_rate})
-                self.camera.align_configuration(config)
-                # Applying configuration
-                self.camera.configure(config)
-                # Setting the controls
-                self.camera.set_controls({'Sharpness': 8})
-                # Starting the camera
-                encoder = picamera2.encoders.MJPEGEncoder()
-                # self.camera.start()
-                self.recording = True
-                output_ = picamera2.outputs.Output(output)
-                #self.on_indicator.on()
-                #self.error_indicator.off()
-                self.camera.start_recording(encoder, output_)
-                print('Camera is started')
-                # await self.record_to_file(self.camera)
+                # # Setting configuration object
+                # config = self.camera.create_video_configuration(
+                #     main={"size": frame_size, "format": "BGR888"},
+                #     controls={'FrameRate': frame_rate})
+                # self.camera.align_configuration(config)
+                # # Applying configuration
+                # self.camera.configure(config)
+                # # Setting the controls
+                # self.camera.set_controls({'Sharpness': 8})
+                # # Starting the camera
+                # encoder = picamera2.encoders.MJPEGEncoder()
+                # # self.camera.start()
+                # self.recording = True
+                # output_ = picamera2.outputs.Output(output)
+                # #self.on_indicator.on()
+                # #self.error_indicator.off()
+                # self.camera.start_recording(encoder, output_)
+                # print('Camera is started')
+                # # await self.record_to_file(self.camera)
 
             except Exception as e:
                 self.on_indicator.off()
