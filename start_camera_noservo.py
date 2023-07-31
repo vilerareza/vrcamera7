@@ -13,7 +13,7 @@ import base64
 
 
 # Server host
-serverHost = "192.168.36.23"
+serverHost = "vrserver99"
 t_reconnection = 3
 
 # Streaming output object
