@@ -48,16 +48,16 @@ class Camera():
                 print ('starting camera')
 
                 '''Picamera ver 1'''
-                # camera = picamera.PiCamera(resolution='HD', framerate = 30)
-                # self.camera = picamera.Picamera(resolution = frame_size, framerate = frame_rate)
-                # self.camera.rotation = 180
-                # self.camera.rotation = 0
-                # self.camera.contrast = 0
-                # self.camera.sharpness = 50
-                # self.recording = True
-                # self.camera.start_recording(output, format='mjpeg')
-                # self.on_indicator.on()
-                # self.error_indicator.off()
+                camera = picamera.PiCamera(resolution='HD', framerate = 30)
+                self.camera = picamera.Picamera(resolution = frame_size, framerate = frame_rate)
+                self.camera.rotation = 180
+                self.camera.rotation = 0
+                self.camera.contrast = 0
+                self.camera.sharpness = 50
+                self.recording = True
+                self.camera.start_recording(output, format='mjpeg')
+                self.on_indicator.on()
+                self.error_indicator.off()
 
                 ''' Picamera ver 2'''
                 # self.camera = picamera2.Picamera2()
