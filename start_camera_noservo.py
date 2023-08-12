@@ -12,37 +12,6 @@ from get_rec_file import get_rec_file
 import base64
 
 
-# Server host
-serverHost = "vrserver99.local"
-t_reconnection = 3
-
-# Streaming output object
-output = StreamingOutput()
-is_recording = True
-
-# Light
-light = Light(pin = 17)
-
-# Indicators
-indicator_0 = Indicator(pin = 22)
-indicator_1 = Indicator(pin = 27)
-
-# Recording files directory
-rec_path = '../rec/'
-# Recording files directory
-mp4_buffer_path = '../mp4buf/'
-# Rec file bytes
-rec_file_dict = {}
-
-# Camera object
-camera = Camera([indicator_1, indicator_0])
-# Frame size
-#frame_size = (640, 480)
-frame_size = (1280, 720)
-# Frame rate
-frame_rate = 20
-
-
 async def on_control(message):
     # Callback function for control message receved by control websocket
 
@@ -283,3 +252,44 @@ async def main():
     print ('end')
 
 asyncio.run (main())
+
+
+if __name__ == '__main__':
+
+    # Server host
+    serverHost = "vrserver99.local"
+    t_reconnection = 3
+
+    # Streaming output object
+    output = StreamingOutput()
+    is_recording = True
+
+    # Light
+    light = Light(pin = 17)
+
+    # Indicators
+    indicator_0 = Indicator(pin = 22)
+    indicator_1 = Indicator(pin = 27)
+
+    # Recording files directory
+    rec_path = '../rec/'
+    # Recording files directory
+    mp4_buffer_path = '../mp4buf/'
+    # Rec file bytes
+    rec_file_dict = {}
+
+    # Camera object
+    camera = Camera([indicator_1, indicator_0])
+    # Frame size
+    #frame_size = (640, 480)
+    frame_size = (1280, 720)
+    # Frame rate
+    frame_rate = 20
+
+    try:
+        asyncio.run (main())
+    except:
+        # Resetting indicators state before exit.
+        indicator_1.off()
+        indicator_0.on()
+        print ('end')
