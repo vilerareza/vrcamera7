@@ -252,8 +252,6 @@ async def main(camera, output, frame_size, frame_rate, serverHost):
     indicator_0.on()
     print ('end')
 
-asyncio.run (main())
-
 
 if __name__ == '__main__':
 
