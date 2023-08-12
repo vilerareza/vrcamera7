@@ -16,6 +16,7 @@ async def on_control(message):
     # Callback function for control message receved by control websocket
 
     global is_recording
+    global light
     global rec_path
     global mp4_buffer_path
     global rec_file_dict
@@ -236,7 +237,7 @@ async def ws_to_server(server_host):
             continue
 
 
-async def main():
+async def main(camera, output, frame_size, frame_rate, serverHost):
     # Start camera
     task_camera = asyncio.create_task(camera.start_camera(output, frame_size = frame_size, frame_rate = frame_rate))
     # Open connection to server
@@ -256,27 +257,12 @@ asyncio.run (main())
 
 if __name__ == '__main__':
 
-    # Server host
-    serverHost = "vrserver99.local"
-    t_reconnection = 3
-
-    # Streaming output object
-    output = StreamingOutput()
-    is_recording = True
-
-    # Light
-    light = Light(pin = 17)
-
     # Indicators
     indicator_0 = Indicator(pin = 22)
     indicator_1 = Indicator(pin = 27)
-
-    # Recording files directory
-    rec_path = '../rec/'
-    # Recording files directory
-    mp4_buffer_path = '../mp4buf/'
-    # Rec file bytes
-    rec_file_dict = {}
+    # Resetting indicators state before exit.
+    indicator_1.off()
+    indicator_0.on()
 
     # Camera object
     camera = Camera([indicator_1, indicator_0])
@@ -284,10 +270,32 @@ if __name__ == '__main__':
     #frame_size = (640, 480)
     frame_size = (1280, 720)
     # Frame rate
-    frame_rate = 20
+    frame_rate = 20    
+    
+    # Streaming output object
+    output = StreamingOutput()
+    is_recording = True
 
+    # Server host
+    serverHost = "vrserver99.local"
+    t_reconnection = 3
+
+    # Light
+    light = Light(pin = 17)
+
+    # Recording files directory
+    rec_path = '../rec/'
+    # Recording files directory
+    mp4_buffer_path = '../mp4buf/'
+    # Rec file bytes
+    rec_file_dict = {}
+    
     try:
-        asyncio.run (main())
+        asyncio.run (main(camera=camera, 
+                          output=output, 
+                          frame_size=frame_size, 
+                          frame_rate=frame_rate, 
+                          serverHost=serverHost ))
     except:
         # Resetting indicators state before exit.
         indicator_1.off()
