@@ -277,6 +277,9 @@ async def main():
     await task_camera
     await task_ws_server
     await task_ws_client
+    # Resetting indicators state before exit.
+    indicator_1.off()
+    indicator_0.on()
     print ('end')
 
 asyncio.run (main())

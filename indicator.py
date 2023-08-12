@@ -9,8 +9,8 @@ class Indicator:
 
     def indicator_init(self):
         # GPIO is in BCM mode
-        GPIO.setmode(GPIO.BCM)
         GPIO.setwarnings(False)
+        GPIO.setmode(GPIO.BCM)
         GPIO.setup(self.pin, GPIO.OUT)
 
     def on(self):
