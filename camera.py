@@ -1,8 +1,9 @@
 import os
 from datetime import datetime
 import asyncio
-#import picamera2
-import picamera
+import picamera2
+from picamera2.outputs import FileOutput
+#import picamera
 
 
 class Camera():
@@ -16,6 +17,7 @@ class Camera():
     def __init__(self, indicators) -> None:
         self.on_indicator = indicators[0]
         self.error_indicator = indicators[1]
+
 
     async def record_to_file(self, camera, splitter_port=2, size=(1280, 720), quality=30, interval = 60):
     
@@ -49,37 +51,40 @@ class Camera():
 
                 '''Picamera ver 1'''
                 #camera = picamera.Picamera(resolution='HD', framerate = 30)
-                self.camera = picamera.PiCamera(resolution = frame_size, framerate = frame_rate)
-                self.camera.rotation = 180
-                self.camera.rotation = 0
-                self.camera.contrast = 0
-                self.camera.sharpness = 50
-                self.recording = True
-                self.camera.start_recording(output, format='mjpeg')
-                self.on_indicator.on()
-                self.error_indicator.off()
+                # self.camera = picamera.PiCamera(resolution = frame_size, framerate = frame_rate)
+                # self.camera.rotation = 180
+                # self.camera.rotation = 0
+                # self.camera.contrast = 0
+                # self.camera.sharpness = 50
+                # self.recording = True
+                # self.camera.start_recording(output, format='mjpeg')
+                # self.on_indicator.on()
+                # self.error_indicator.off()
 
                 ''' Picamera ver 2'''
                 # self.camera = picamera2.Picamera2()
                 
                 # # Setting configuration object
-                # config = self.camera.create_video_configuration(
-                #     main={"size": frame_size, "format": "BGR888"},
-                #     controls={'FrameRate': frame_rate})
-                # self.camera.align_configuration(config)
-                # # Applying configuration
-                # self.camera.configure(config)
-                # # Setting the controls
-                # self.camera.set_controls({'Sharpness': 8})
-                # # Starting the camera
-                # encoder = picamera2.encoders.MJPEGEncoder()
-                # # self.camera.start()
-                # self.recording = True
+                config = self.camera.create_video_configuration(
+                    main={"size": frame_size, "format": "BGR888"},
+                    controls={'FrameRate': frame_rate})
+                self.camera.align_configuration(config)
+                # Applying configuration
+                self.camera.configure(config)
+                # Setting the controls
+                self.camera.set_controls({'Sharpness': 8})
+                # Starting the camera
+                encoder = picamera2.encoders.MJPEGEncoder()
+                # self.camera.start()
+                self.recording = True
                 # output_ = picamera2.outputs.Output(output)
-                # #self.on_indicator.on()
-                # #self.error_indicator.off()
-                # self.camera.start_recording(encoder, output_)
-                # print('Camera is started')
+                output_ = picamera2.FileOutput(output)
+                #self.on_indicator.on()
+                #self.error_indicator.off()
+                self.camera.start_recording(encoder, output_)
+                print('Camera is started')
+
+
                 # # await self.record_to_file(self.camera)
 
             except Exception as e:
