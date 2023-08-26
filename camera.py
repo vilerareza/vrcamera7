@@ -62,8 +62,7 @@ class Camera():
                 # self.error_indicator.off()
 
                 ''' Picamera ver 2'''
-                # self.camera = picamera2.Picamera2()
-                
+                self.camera = picamera2.Picamera2()
                 # # Setting configuration object
                 config = self.camera.create_video_configuration(
                     main={"size": frame_size, "format": "BGR888"},
