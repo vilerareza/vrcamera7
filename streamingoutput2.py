@@ -14,7 +14,7 @@ class StreamingOutput2(io.BytesIO):
             # New frame
             self.truncate()
             with self.condition:
-                self.frame = self.buffer.getvalue()
+                self.frame = self.getvalue()
                 self.condition.notify_all()
             self.buffer.seek(0)
         return self.write(buf)
