@@ -10,11 +10,9 @@ class StreamingOutput2(BytesIO):
         super().__init__()
         self.frame = None
         self.condition = Condition()
-        #print ('init')
 
     def write(self, buf):
         super().write(buf)
-        print ('write buff')
         if buf.startswith(b'\xff\xd8'):
             # New frame
             self.truncate()
@@ -22,5 +20,3 @@ class StreamingOutput2(BytesIO):
                 self.frame = self.getvalue()
                 self.condition.notify_all()
             self.seek(0)
-            print ('new frame')
-        #return self.write(buf)
