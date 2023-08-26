@@ -16,5 +16,5 @@ class StreamingOutput2(io.BytesIO):
             with self.condition:
                 self.frame = self.getvalue()
                 self.condition.notify_all()
-            self.buffer.seek(0)
+            self.seek(0)
         return self.write(buf)
