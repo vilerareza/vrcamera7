@@ -64,12 +64,12 @@ class Camera():
             ''' Picamera ver 2'''
             self.camera = picamera2.Picamera2()
             # # Setting configuration object
-            #config = self.camera.create_video_configuration(
-            #    main={"size": frame_size, "format": "BGR888"},
-            #    controls={'FrameRate': frame_rate})
+            config = self.camera.create_video_configuration(
+                main={"size": frame_size, "format": "BGR888"},
+                controls={'FrameRate': frame_rate})
             #self.camera.align_configuration(config)
             # Applying configuration
-            #self.camera.configure(config)
+            self.camera.configure(config)
             # Setting the controls
             #self.camera.set_controls({'Sharpness': 8})
             # Starting the camera
