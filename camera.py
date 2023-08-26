@@ -80,7 +80,7 @@ class Camera():
             output_ = FileOutput(output)
             #self.on_indicator.on()
             #self.error_indicator.off()
-            self.camera.start_recording(encoder, output_)
+            self.camera.start_recording(encoder, 'test2.h264')
             print('Camera is started')
 
 
