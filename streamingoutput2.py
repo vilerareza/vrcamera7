@@ -10,6 +10,7 @@ class StreamingOutput2(BytesIO):
         super().__init__()
         self.frame = None
         self.condition = Condition()
+        print ('init')
 
     def write(self, buf):
         if buf.startswith(b'\xff\xd8'):
