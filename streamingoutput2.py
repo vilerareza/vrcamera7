@@ -19,4 +19,5 @@ class StreamingOutput2(BytesIO):
                 self.frame = self.getvalue()
                 self.condition.notify_all()
             self.seek(0)
+            print ('new frame')
         return self.write(buf)
