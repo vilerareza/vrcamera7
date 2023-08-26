@@ -64,9 +64,9 @@ class Camera():
             ''' Picamera ver 2'''
             self.camera = picamera2.Picamera2()
             # # Setting configuration object
-            #config = self.camera.create_video_configuration(
-            #    main={"size": frame_size, "format": "BGR888"},
-            #    controls={'FrameRate': frame_rate})
+            config = self.camera.create_video_configuration(
+                main={"size": frame_size, "format": "BGR888"},
+                controls={'FrameRate': frame_rate})
             #self.camera.align_configuration(config)
             # Applying configuration
             #self.camera.configure(config)
@@ -80,7 +80,7 @@ class Camera():
             output_ = FileOutput(output)
             #self.on_indicator.on()
             #self.error_indicator.off()
-            #self.camera.start_recording(encoder, output_)
+            self.camera.start_recording(encoder, 'test.h264')
             print('Camera is started')
 
 
