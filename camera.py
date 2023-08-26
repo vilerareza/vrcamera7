@@ -68,9 +68,7 @@ class Camera():
             #    main={"size": frame_size, "format": "BGR888"},
             #    controls={'FrameRate': frame_rate})
 
-            config = self.camera.create_video_configuration(
-                main={"format": "BGR888"},
-                controls={'FrameRate': frame_rate})
+            config = self.camera.create_video_configuration()
             #self.camera.align_configuration(config)
             # Applying configuration
             self.camera.configure(config)
