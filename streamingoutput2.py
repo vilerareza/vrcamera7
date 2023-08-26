@@ -1,11 +1,13 @@
-import io
+from io import BytesIO 
 from threading import Condition
 
-class StreamingOutput2(io.BytesIO):
+
+class StreamingOutput2(BytesIO):
     '''
     Streaming output object
     '''
     def __init__(self):
+        super().__init__()
         self.frame = None
         self.condition = Condition()
 
