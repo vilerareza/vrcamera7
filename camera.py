@@ -73,7 +73,7 @@ class Camera():
             # Setting the controls
             #self.camera.set_controls({'Sharpness': 8})
             # Starting the camera
-            encoder = picamera2.encoders.MJPEGEncoder()
+            encoder = picamera2.encoders.JPEGEncoder()
             # self.camera.start()
             self.recording = True
             # output_ = picamera2.outputs.Output(output)
