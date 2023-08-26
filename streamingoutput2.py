@@ -13,6 +13,7 @@ class StreamingOutput2(BytesIO):
         print ('init')
 
     def write(self, buf):
+        print ('write buff')
         if buf.startswith(b'\xff\xd8'):
             # New frame
             self.truncate()
