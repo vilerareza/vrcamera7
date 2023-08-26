@@ -67,13 +67,13 @@ class Camera():
             config = self.camera.create_video_configuration(
                 main={"size": frame_size, "format": "BGR888"},
                 controls={'FrameRate': frame_rate})
-            #self.camera.align_configuration(config)
+            self.camera.align_configuration(config)
             # Applying configuration
             self.camera.configure(config)
             # Setting the controls
             self.camera.set_controls({'Sharpness': 8})
             # Starting the camera
-            encoder = picamera2.encoders.JPEGEncoder()
+            encoder = picamera2.encoders.MJPEGEncoder()
             # self.camera.start()
             self.recording = True
             # output_ = picamera2.outputs.Output(output)
