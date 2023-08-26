@@ -10,7 +10,7 @@ class StreamingOutput2(BytesIO):
         super().__init__()
         self.frame = None
         self.condition = Condition()
-        print ('init')
+        #print ('init')
 
     def write(self, buf):
         super().write(buf)
@@ -23,4 +23,4 @@ class StreamingOutput2(BytesIO):
                 self.condition.notify_all()
             self.seek(0)
             print ('new frame')
-        return self.write(buf)
+        #return self.write(buf)
