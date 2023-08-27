@@ -70,7 +70,7 @@ class Camera():
 
             config = self.camera.create_video_configuration()
             self.camera.align_configuration(config)
-            print (config;'main')
+            print (config['main'])
             # Applying configuration
             self.camera.configure(config)
             # Setting the controls
