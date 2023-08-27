@@ -3,7 +3,7 @@ import asyncio
 import websockets
 from functools import partial
 from camera import Camera
-from streamingoutput2 import StreamingOutput2
+from streamingoutput import StreamingOutput
 from light import Light
 from indicator import Indicator
 from threading import Thread, Condition
@@ -271,7 +271,7 @@ if __name__ == '__main__':
     frame_rate = 20    
     
     # Streaming output object
-    output = StreamingOutput2()
+    output = StreamingOutput()
     is_recording = True
 
     # Server host
