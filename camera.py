@@ -64,11 +64,11 @@ class Camera():
             ''' Picamera ver 2'''
             self.camera = picamera2.Picamera2()
             # # Setting configuration object
-            #config = self.camera.create_video_configuration(
-            #    main={"size": (640,480), "format": "BGR888"},
-            #    controls={'FrameRate': 25})
+            config = self.camera.create_video_configuration(
+                main={"size": (640,480), "format": "XBGR888"},
+                controls={'FrameRate': 25})
 
-            config = self.camera.create_video_configuration()
+            #config = self.camera.create_video_configuration()
             self.camera.align_configuration(config)
             print (config['main'])
             # Applying configuration
