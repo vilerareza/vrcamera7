@@ -74,7 +74,7 @@ class Camera():
             # Applying configuration
             self.camera.configure(config)
             # Setting the controls
-            self.camera.set_controls({'Sharpness': 8})
+            #self.camera.set_controls({'Sharpness': 8})
             # Starting the camera
             encoder = picamera2.encoders.JpegEncoder()
             # self.camera.start()
