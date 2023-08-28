@@ -65,7 +65,7 @@ class Camera():
             self.camera = picamera2.Picamera2()
             # # Setting configuration object
             config = self.camera.create_video_configuration(
-                main={"size": frame_size, "format": "RGB888"},
+                main={"size": frame_size},
                 controls={'FrameRate': 10})
 
             #config = self.camera.create_video_configuration()
