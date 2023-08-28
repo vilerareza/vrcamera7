@@ -265,10 +265,10 @@ if __name__ == '__main__':
     # Camera object
     camera = Camera([indicator_1, indicator_0])
     # Frame size
-    frame_size = (640, 480)
-    #frame_size = (1280, 720)
+    #frame_size = (640, 480)
+    frame_size = (1280, 720)
     # Frame rate
-    frame_rate = 20    
+    frame_rate = 25   
     
     # Streaming output object
     output = StreamingOutput2()
