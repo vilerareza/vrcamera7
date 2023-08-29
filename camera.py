@@ -69,7 +69,7 @@ class Camera():
                 controls={'FrameRate': 10})
 
             #config = self.camera.create_video_configuration()
-            self.camera.align_configuration(config)
+            #self.camera.align_configuration(config)
             #print (config['main'])
             # Applying configuration
             self.camera.configure(config)
