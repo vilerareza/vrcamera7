@@ -4,7 +4,7 @@ import asyncio
 import picamera2
 from picamera2.outputs import FileOutput
 #import picamera
-
+import time
 
 class Camera():
 
@@ -85,7 +85,7 @@ class Camera():
             #self.error_indicator.off()
             self.camera.start_recording(encoder, output_)
             print('Camera is started')
-
+            time.sleep(2)
             size = picamera2.capture_metadata()['ScalerCrop'][2:]
             print (f'size: {size}')
 
