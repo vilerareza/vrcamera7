@@ -77,7 +77,6 @@ class Camera():
             self.camera.set_controls({'Sharpness': 8})
             # Starting the camera
             encoder = picamera2.encoders.JpegEncoder()
-            self.camera.start()
             self.recording = True
             # output_ = picamera2.outputs.Output(output)
             output_ = FileOutput(output)
@@ -86,8 +85,10 @@ class Camera():
             self.camera.start_recording(encoder, output_)
             print('Camera is started')
             time.sleep(2)
-            size = picamera2.capture_metadata()['ScalerCrop'][2:]
+            size = self.camera.capture_metadata()['ScalerCrop'][2:]
             print (f'size: {size}')
+            print (self.camera.video_configuration.size)
+            print(self.camera.video_configuration.format)
 
 
                 # # await self.record_to_file(self.camera)
