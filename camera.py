@@ -89,6 +89,10 @@ class Camera():
             print (f'size: {size}')
             print (self.camera.video_configuration.size)
             print(self.camera.video_configuration.format)
+            img1 = self.camera.capture_array('main')
+            print (img1.shape)
+            img2 = self.camera.capture_array('lores')
+            print (img2.shape)
 
 
                 # # await self.record_to_file(self.camera)
