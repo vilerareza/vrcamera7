@@ -65,7 +65,7 @@ class Camera():
             self.camera = picamera2.Picamera2()
             # # Setting configuration object
             config = self.camera.create_video_configuration(
-                main={'size': frame_size, 'format': 'YUV420'},
+                main={'size': frame_size},
                 controls={'FrameRate': frame_rate})
 
             #config = self.camera.create_video_configuration()
@@ -85,7 +85,7 @@ class Camera():
             self.camera.start_recording(encoder, output_)
             print('Camera is started')
             time.sleep(2)
-            size = self.camera.capture_metadata()['ScalerCrop'][2:]
+            size = self.camera.capture_metadata()['ScalerCrop']
             print (f'size: {size}')
             print (self.camera.video_configuration.size)
             print(self.camera.video_configuration.format)
