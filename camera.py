@@ -65,11 +65,11 @@ class Camera():
             self.camera = picamera2.Picamera2()
             # # Setting configuration object
             config = self.camera.create_video_configuration(
-                main={"size": frame_size},
-                controls={'FrameRate': 10})
+                main={'size': frame_size},
+                controls={'FrameRate': frame_rate})
 
             #config = self.camera.create_video_configuration()
-            #self.camera.align_configuration(config)
+            self.camera.align_configuration(config)
             #print (config['main'])
             # Applying configuration
             self.camera.configure(config)
@@ -85,6 +85,8 @@ class Camera():
             #self.error_indicator.off()
             self.camera.start_recording(encoder, output_)
             print('Camera is started')
+
+            print(picamera2.capture_metadata()['ScalerCrop'][2:])
 
 
                 # # await self.record_to_file(self.camera)
