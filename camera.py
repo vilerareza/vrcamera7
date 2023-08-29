@@ -64,7 +64,7 @@ class Camera():
             ''' Picamera ver 2'''
             self.camera = picamera2.Picamera2()
             # # Setting configuration object
-            config = self.camera.create_capture_configuration(
+            config = self.camera.create_preview_configuration(
                 main={'size': frame_size},
                 controls={'FrameRate': frame_rate})
 
