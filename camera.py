@@ -86,7 +86,8 @@ class Camera():
             self.camera.start_recording(encoder, output_)
             print('Camera is started')
 
-            print(picamera2.capture_metadata()['ScalerCrop'][2:])
+            size = picamera2.capture_metadata()['ScalerCrop'][2:]
+            print (f'size: {size}')
 
 
                 # # await self.record_to_file(self.camera)
