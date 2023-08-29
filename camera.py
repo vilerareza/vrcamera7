@@ -50,7 +50,7 @@ class Camera():
             print ('starting camera')
 
             '''Picamera ver 1'''
-            camera = picamera.Picamera(resolution='HD', framerate = 30)
+            #camera = picamera.Picamera(resolution='HD', framerate = 30)
             self.camera = picamera.PiCamera(resolution = frame_size, framerate = frame_rate)
             self.camera.rotation = 180
             self.camera.rotation = 0
