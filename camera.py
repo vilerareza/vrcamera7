@@ -64,7 +64,7 @@ class Camera():
             ''' Picamera ver 2'''
             self.camera = picamera2.Picamera2()
             # # Setting configuration object
-            config = self.camera.create_preview_configuration(
+            config = self.camera.create_video_configuration(
                 main={'size': frame_size},
                 controls={'FrameRate': frame_rate})
 
@@ -75,10 +75,10 @@ class Camera():
             self.camera.configure(config)
             # Setting the controls
             self.camera.set_controls({'Sharpness': 8})
+            self.camera.set_controls({'ScalerCrop': [0,0, 500, 500]})
             # Starting the camera
             encoder = picamera2.encoders.JpegEncoder()
             self.recording = True
-            # output_ = picamera2.outputs.Output(output)
             output_ = FileOutput(output)
             #self.on_indicator.on()
             #self.error_indicator.off()
