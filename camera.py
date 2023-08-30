@@ -75,7 +75,7 @@ class Camera():
             self.camera.configure(config)
             # Setting the controls
             self.camera.set_controls({'Sharpness': 8})
-            #self.camera.set_controls({'ScalerCrop': [0,0, 500, 500]})
+            self.camera.set_controls({'ScalerCrop': [10,10, 500, 500]})
             # Starting the camera
             encoder = picamera2.encoders.JpegEncoder()
             self.recording = True
