@@ -73,6 +73,10 @@ class Camera():
             #print (config['main'])
             # Applying configuration
             self.camera.configure(config)
+
+            time.sleep(1)
+            size = self.camera.capture_metadata()['ScalerCrop'][2:]
+            print (f'size: {size}')
             # Setting the controls
             self.camera.set_controls({'Sharpness': 8})
             self.camera.set_controls({'ScalerCrop': [10,10, 500, 500]})
@@ -86,9 +90,7 @@ class Camera():
             #self.error_indicator.off()
             self.camera.start_recording(encoder, output_)
             print('Camera is started')
-            #time.sleep(2)
-            #size = self.camera.capture_metadata()['ScalerCrop']
-            #print (f'size: {size}')
+            
 
 
                 # # await self.record_to_file(self.camera)
