@@ -75,7 +75,7 @@ class Camera():
             print (f'full res: {full_res}')
             # Setting the controls
             self.camera.set_controls({'Sharpness': 8})
-            #self.camera.set_controls({'ScalerCrop': [0,0,3280,2464]})
+            self.camera.set_controls({'ScalerCrop': [0,0,500,500]})
             self.camera.options['quality'] = 95
             self.camera.options['compress_level'] = 9
             # Starting the camera
