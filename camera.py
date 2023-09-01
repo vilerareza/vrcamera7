@@ -68,14 +68,14 @@ class Camera():
                 main={'size': frame_size},
                 controls={'FrameRate': frame_rate})
 
-            #self.camera.align_configuration(config)
+            self.camera.align_configuration(config)
             # Applying configuration
             self.camera.configure(config)
             full_res = self.camera.camera_properties['PixelArraySize']
             print (f'full res: {full_res}')
             # Setting the controls
             self.camera.set_controls({'Sharpness': 8})
-            self.camera.set_controls({'ScalerCrop': [0,0,500,500]})
+            self.camera.set_controls({'ScalerCrop': [0,0,1920,1080]})
             self.camera.options['quality'] = 95
             self.camera.options['compress_level'] = 9
             # Starting the camera
