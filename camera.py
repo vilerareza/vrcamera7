@@ -65,9 +65,11 @@ class Camera():
             self.camera = picamera2.Picamera2()
             # Setting configuration object
             config = self.camera.create_video_configuration(
-                main={'size': frame_size},
+                main={'size': frame_size,  'crop_limits': (0, 0, 3280, 2464)},
                 controls={'FrameRate': frame_rate},
                 raw=self.camera.sensor_modes[3])
+
+            # config = self.camera.create_video_configuration()
 
             self.camera.align_configuration(config)
             # Applying configuration
@@ -77,7 +79,7 @@ class Camera():
             # Setting the controls
             self.camera.set_controls({'Sharpness': 8})
             self.camera.set_controls({'ScalerCrop': [10,10,3280,2464]})
-            print (len(self.camera.sensor_modes))
+            #print (len(self.camera.sensor_modes))
             #print (self.camera.raw)
             #self.camera.options['quality'] = 10
             #self.camera.options['compress_level'] = 9
