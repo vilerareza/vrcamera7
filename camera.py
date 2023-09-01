@@ -68,9 +68,7 @@ class Camera():
                 main={'size': frame_size},
                 controls={'FrameRate': frame_rate})
 
-            #config = self.camera.create_video_configuration()
             self.camera.align_configuration(config)
-            #print (config['main'])
             # Applying configuration
             self.camera.configure(config)
             full_res = self.camera.camera_properties['PixelArraySize']
@@ -78,7 +76,7 @@ class Camera():
             # Setting the controls
             self.camera.set_controls({'Sharpness': 8})
             #self.camera.set_controls({'ScalerCrop': [10,10, 500, 500]})
-            self.camera.set_controls({'ScalerCrop': [0,0, 3280,2464]})
+            #self.camera.set_controls({'ScalerCrop': [0,0,3280,2464]})
             self.camera.options['quality'] = 95
             self.camera.options['compress_level'] = 9
             # Starting the camera
@@ -89,9 +87,9 @@ class Camera():
             #self.error_indicator.off()
             self.camera.start_recording(encoder, output_)
             print('Camera is started')
-            #time.sleep(2)
-            #size = self.camera.capture_metadata()['ScalerCrop']
-            #print (f'size: {size}')
+            time.sleep(2)
+            size = self.camera.capture_metadata()['ScalerCrop']
+            print (f'size: {size}')
 
 
                 # # await self.record_to_file(self.camera)
