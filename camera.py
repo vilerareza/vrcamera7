@@ -76,7 +76,7 @@ class Camera():
             # Setting the controls
             self.camera.set_controls({'Sharpness': 8})
             self.camera.set_controls({'ScalerCrop': [10,10,3280,2464]})
-            print (self.camera.sensor_modes)
+            print (len(self.camera.sensor_modes))
             #self.camera.options['quality'] = 10
             #self.camera.options['compress_level'] = 9
             # Starting the camera
