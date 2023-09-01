@@ -66,8 +66,7 @@ class Camera():
             # Setting configuration object
             config = self.camera.create_video_configuration(
                 main={'size': frame_size},
-                controls={'FrameRate': frame_rate},
-                raw=self.camera.sensor_modes[3])
+                controls={'FrameRate': frame_rate})
 
             # config = self.camera.create_video_configuration()
 
