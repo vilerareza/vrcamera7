@@ -74,8 +74,8 @@ class Camera():
             full_res = self.camera.camera_properties['PixelArraySize']
             print (f'full res: {full_res}')
             # Setting the controls
-            self.camera.set_controls({'Sharpness': 8})
-            self.camera.set_controls({'ScalerCrop': [10,10,3280,2464]})
+            #self.camera.set_controls({'Sharpness': 8})
+            #self.camera.set_controls({'ScalerCrop': [10,10,3280,2464]})
             print (len(self.camera.sensor_modes))
             print (self.camera.raw)
             #self.camera.options['quality'] = 10
