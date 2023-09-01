@@ -64,13 +64,13 @@ class Camera():
             ''' Picamera ver 2'''
             self.camera = picamera2.Picamera2()
             # Setting configuration object
-            config = self.camera.create_video_configuration(
-                main={'size': frame_size},
-                controls={'FrameRate': frame_rate})
+            #config = self.camera.create_video_configuration(
+            #    main={'size': frame_size},
+            #    controls={'FrameRate': frame_rate})
 
-            self.camera.align_configuration(config)
+            #self.camera.align_configuration(config)
             # Applying configuration
-            self.camera.configure(config)
+            #self.camera.configure(config)
             full_res = self.camera.camera_properties['PixelArraySize']
             print (f'full res: {full_res}')
             # Setting the controls
