@@ -68,7 +68,7 @@ class Camera():
                 main={'size': frame_size},
                 controls={'FrameRate': frame_rate})
 
-            self.camera.align_configuration(config)
+            #self.camera.align_configuration(config)
             # Applying configuration
             self.camera.configure(config)
             full_res = self.camera.camera_properties['PixelArraySize']
