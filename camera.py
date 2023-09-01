@@ -65,7 +65,7 @@ class Camera():
             self.camera = picamera2.Picamera2()
             # Setting configuration object
             config = self.camera.create_video_configuration(
-                main={'size': frame_size,  'crop_limits': (0, 0, 3280, 2464)},
+                main={'size': frame_size},
                 controls={'FrameRate': frame_rate},
                 raw=self.camera.sensor_modes[3])
 
