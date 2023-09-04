@@ -64,13 +64,13 @@ class Camera():
             ''' Picamera ver 2'''
             self.camera = picamera2.Picamera2()
             # Setting configuration object
-            #config = self.camera.create_video_configuration(
-                # main={'size': frame_size},
-                # controls={'FrameRate': frame_rate})
-            
             config = self.camera.create_video_configuration(
-                main=self.camera.sensor_modes[3],
+                main={'size': 3280,2464},
                 controls={'FrameRate': frame_rate})
+            
+            # config = self.camera.create_video_configuration(
+            #     main=self.camera.sensor_modes[3],
+            #     controls={'FrameRate': frame_rate})
 
             # config = self.camera.create_video_configuration()
 
