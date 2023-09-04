@@ -68,11 +68,11 @@ class Camera():
             # config = self.camera.create_video_configuration(
             #     main={'size': (3280,2464)},
             #     controls={'FrameRate': frame_rate})
-            # config = self.camera.create_video_configuration(
-            #     main=self.camera.sensor_modes[3],
-            #     controls={'FrameRate': frame_rate})
+            config = self.camera.create_video_configuration(
+                main={'size': (1280,720)}
+                controls={'FrameRate': frame_rate})
 
-            config = self.camera.create_video_configuration()
+            # config = self.camera.create_video_configuration()
 
             #self.camera.align_configuration(config)
             # Applying configuration
