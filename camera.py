@@ -78,7 +78,9 @@ class Camera():
             # Applying configuration
             self.camera.configure(config)
             full_res = self.camera.camera_properties['PixelArraySize']
+            crop_max = self.camera.camera_properties['ScalerCropMaximum']
             print (f'full res: {full_res}')
+            print (f'crop max: {crop_max}')
             # Setting the controls
             self.camera.set_controls({'Sharpness': 8})
             self.camera.set_controls({'ScalerCrop': [10,10,1280,720]})
