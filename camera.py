@@ -1,9 +1,9 @@
 import os
 from datetime import datetime
 import asyncio
-import picamera2
-from picamera2.outputs import FileOutput
-#import picamera
+#import picamera2
+#from picamera2.outputs import FileOutput
+import picamera
 import time
 
 class Camera():
@@ -51,53 +51,53 @@ class Camera():
 
             '''Picamera ver 1'''
             #camera = picamera.Picamera(resolution='HD', framerate = 30)
-            # self.camera = picamera.PiCamera(resolution = frame_size, framerate = frame_rate)
-            # self.camera.rotation = 180
-            # self.camera.rotation = 0
-            # self.camera.contrast = 0
-            # self.camera.sharpness = 50
-            # self.recording = True
-            # self.camera.start_recording(output, format='mjpeg')
-            # self.on_indicator.on()
-            # self.error_indicator.off()
+            self.camera = picamera.PiCamera(resolution = frame_size, framerate = frame_rate)
+            self.camera.rotation = 180
+            self.camera.rotation = 0
+            self.camera.contrast = 0
+            self.camera.sharpness = 50
+            self.recording = True
+            self.camera.start_recording(output, format='mjpeg')
+            self.on_indicator.on()
+            self.error_indicator.off()
 
             ''' Picamera ver 2'''
-            self.camera = picamera2.Picamera2()
+            # self.camera = picamera2.Picamera2()
 
-            # Setting configuration object
-            config = self.camera.create_video_configuration(
-                main={'size': (3280,2464)},
-                controls={'FrameRate': frame_rate})
+            # # Setting configuration object
             # config = self.camera.create_video_configuration(
-            #     main={'size': (1280,720)},
+            #     main={'size': (3280,2464)},
             #     controls={'FrameRate': frame_rate})
+            # # config = self.camera.create_video_configuration(
+            # #     main={'size': (1280,720)},
+            # #     controls={'FrameRate': frame_rate})
 
-            # config = self.camera.create_video_configuration()
+            # # config = self.camera.create_video_configuration()
 
-            self.camera.align_configuration(config)
-            # Applying configuration
-            self.camera.configure(config)
-            full_res = self.camera.camera_properties['PixelArraySize']
-            crop_max = self.camera.camera_properties['ScalerCropMaximum']
-            print (f'full res: {full_res}')
-            print (f'crop max: {crop_max}')
-            # Setting the controls
-            self.camera.set_controls({'Sharpness': 8})
-            self.camera.set_controls({'ScalerCrop': [10,10,1280,720]})
-            #print (len(self.camera.sensor_modes))
-            #print (self.camera.raw)
-            #self.camera.options['quality'] = 10
-            #self.camera.options['compress_level'] = 9
-            # Starting the camera
-            encoder = picamera2.encoders.JpegEncoder()
-            self.recording = True
-            output_ = FileOutput(output)
-            #self.on_indicator.on()
-            #self.error_indicator.off()
-            self.camera.start_recording(encoder, output_)
-            time.sleep(2)
-            size = self.camera.capture_metadata()['ScalerCrop']
-            print (f'size: {size}')
+            # self.camera.align_configuration(config)
+            # # Applying configuration
+            # self.camera.configure(config)
+            # full_res = self.camera.camera_properties['PixelArraySize']
+            # crop_max = self.camera.camera_properties['ScalerCropMaximum']
+            # print (f'full res: {full_res}')
+            # print (f'crop max: {crop_max}')
+            # # Setting the controls
+            # self.camera.set_controls({'Sharpness': 8})
+            # self.camera.set_controls({'ScalerCrop': [10,10,1280,720]})
+            # #print (len(self.camera.sensor_modes))
+            # #print (self.camera.raw)
+            # #self.camera.options['quality'] = 10
+            # #self.camera.options['compress_level'] = 9
+            # # Starting the camera
+            # encoder = picamera2.encoders.JpegEncoder()
+            # self.recording = True
+            # output_ = FileOutput(output)
+            # #self.on_indicator.on()
+            # #self.error_indicator.off()
+            # self.camera.start_recording(encoder, output_)
+            # time.sleep(2)
+            # size = self.camera.capture_metadata()['ScalerCrop']
+            # print (f'size: {size}')
 
             print('Camera is started')
                 # # await self.record_to_file(self.camera)
