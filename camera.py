@@ -66,7 +66,7 @@ class Camera():
 
             # Setting configuration object
             config = self.camera.create_video_configuration(
-                main={'size': (1920,1080)},
+                main={'size': (3280,2464)},
                 controls={'FrameRate': frame_rate})
             # config = self.camera.create_video_configuration(
             #     main={'size': (1280,720)},
@@ -83,7 +83,7 @@ class Camera():
             print (f'crop max: {crop_max}')
             # Setting the controls
             self.camera.set_controls({'Sharpness': 8})
-            self.camera.set_controls({'ScalerCrop': [0,0,1920,1080]})
+            self.camera.set_controls({'ScalerCrop': [1000,872,1280,720]})
             #print (len(self.camera.sensor_modes))
             #print (self.camera.raw)
             #self.camera.options['quality'] = 10
