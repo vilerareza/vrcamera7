@@ -66,15 +66,11 @@ class Camera():
 
             # Setting configuration object
             config = self.camera.create_video_configuration(
-                main={'size': (3280,2464)},
+                main={'size': (1920,1080)},
                 controls={'FrameRate': frame_rate})
-            # config = self.camera.create_video_configuration(
-            #     main={'size': (1280,720)},
-            #     controls={'FrameRate': frame_rate})
 
-            # config = self.camera.create_video_configuration()
-
-            #self.camera.align_configuration(config)
+            # Align configuration
+            self.camera.align_configuration(config)
             # Applying configuration
             self.camera.configure(config)
             full_res = self.camera.camera_properties['PixelArraySize']
@@ -83,9 +79,7 @@ class Camera():
             print (f'crop max: {crop_max}')
             # Setting the controls
             self.camera.set_controls({'Sharpness': 8})
-            self.camera.set_controls({'ScalerCrop': [900,772,1280,720]})
-            print (self.camera.sensor_modes)
-            #print (self.camera.raw)
+            # self.camera.set_controls({'ScalerCrop': [900,772,1280,720]})
             #self.camera.options['quality'] = 10
             #self.camera.options['compress_level'] = 9
             # Starting the camera
