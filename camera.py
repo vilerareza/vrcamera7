@@ -89,9 +89,9 @@ class Camera():
             #self.on_indicator.on()
             #self.error_indicator.off()
             self.camera.start_recording(encoder, output_)
-            time.sleep(2)
-            size = self.camera.capture_metadata()['ScalerCrop']
-            print (f'size: {size}')
+            # time.sleep(2)
+            # size = self.camera.capture_metadata()['ScalerCrop']
+            # print (f'size: {size}')
 
             print('Camera is started')
                 # # await self.record_to_file(self.camera)
