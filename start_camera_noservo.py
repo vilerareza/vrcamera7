@@ -1,16 +1,15 @@
 import os
 import asyncio
 import websockets
-from functools import partial
 from camera import Camera
 from streamingoutput2 import StreamingOutput2
 from light import Light
 from indicator import Indicator
-from threading import Thread, Condition
 import json
 from get_rec_file import get_rec_file
 import base64
 
+import time
 
 async def on_control(message):
     # Callback function for control message receved by control websocket
@@ -211,7 +210,10 @@ async def ws_to_server(server_host):
 
     def wait (output):
         with output.condition:
+            t1 = time.time()
             output.condition.wait()
+            t2 = time.time()
+            print (t2-t1)
             return output.frame
 
     while True:
@@ -242,7 +244,7 @@ async def main(camera, output, frame_size, frame_rate, serverHost):
     task_camera = asyncio.create_task(camera.start_camera(output, frame_size = frame_size, frame_rate = frame_rate))
     # Open connection to server
     task_ws_server = asyncio.create_task(ws_to_server(serverHost))
-    # Listening connection form client
+    # Listening connection from client
     task_ws_client = asyncio.create_task(ws_to_client())
     await task_camera
     await task_ws_server

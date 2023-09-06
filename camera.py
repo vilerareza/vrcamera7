@@ -1,9 +1,7 @@
 import os
 from datetime import datetime
 import asyncio
-import picamera2
-from picamera2.outputs import FileOutput
-#import picamera
+import picamera
 import time
 
 class Camera():
@@ -21,8 +19,8 @@ class Camera():
 
     async def record_to_file(self, camera, splitter_port=2, size=(1280, 720), quality=30, interval = 60):
     
-        # async def wait_recording():
-        #     camera.wait_recording(interval, splitter_port=splitter_port)
+        async def wait_recording():
+            camera.wait_recording(interval, splitter_port=splitter_port)
 
         first_file = True
 
@@ -41,65 +39,33 @@ class Camera():
                 camera.split_recording(f'{dir_name}{file_name}', splitter_port=splitter_port, resize=size, quality=quality)
             
             await asyncio.sleep(interval)
-            #await asyncio.to_thread(wait_recording)
+            await asyncio.to_thread(wait_recording)
 
 
     async def start_camera(self, output, frame_size, frame_rate):
         if not self.camera:
-            #try:
-            print ('starting camera')
+            try:
+                print ('starting camera')
 
-            '''Picamera ver 1'''
-            #camera = picamera.Picamera(resolution='HD', framerate = 30)
-            # self.camera = picamera.PiCamera(resolution = frame_size, framerate = frame_rate)
-            # self.camera.rotation = 180
-            # self.camera.rotation = 0
-            # self.camera.contrast = 0
-            # self.camera.sharpness = 50
-            # self.recording = True
-            # self.camera.start_recording(output, format='mjpeg')
-            # self.on_indicator.on()
-            # self.error_indicator.off()
+                '''Picamera ver 1'''
+                camera = picamera.Picamera(resolution='HD', framerate = 30)
+                self.camera = picamera.PiCamera(resolution = frame_size, framerate = frame_rate)
+                self.camera.rotation = 180
+                self.camera.rotation = 0
+                self.camera.contrast = 0
+                self.camera.sharpness = 50
+                self.recording = True
+                self.camera.start_recording(output, format='mjpeg')
+                self.on_indicator.on()
+                self.error_indicator.off()
 
-            ''' Picamera ver 2'''
-            self.camera = picamera2.Picamera2()
+                print('Camera is started')
+                await self.record_to_file(self.camera)
 
-            # Setting configuration object
-            config = self.camera.create_video_configuration(
-                main={'size': (1920,1080)},
-                controls={'FrameRate': frame_rate})
-
-            # Align configuration
-            self.camera.align_configuration(config)
-            # Applying configuration
-            self.camera.configure(config)
-            full_res = self.camera.camera_properties['PixelArraySize']
-            crop_max = self.camera.camera_properties['ScalerCropMaximum']
-            print (f'full res: {full_res}')
-            print (f'crop max: {crop_max}')
-            # Setting the controls
-            #self.camera.set_controls({'Sharpness': 8})
-            # self.camera.set_controls({'ScalerCrop': [900,772,1280,720]})
-            #self.camera.options['quality'] = 95
-            #self.camera.options['compress_level'] = 9
-            # Starting the camera
-            encoder = picamera2.encoders.JpegEncoder()
-            self.recording = True
-            output_ = FileOutput(output)
-            #self.on_indicator.on()
-            #self.error_indicator.off()
-            self.camera.start_recording(encoder, output_)
-            # time.sleep(2)
-            # size = self.camera.capture_metadata()['ScalerCrop']
-            # print (f'size: {size}')
-
-            print('Camera is started')
-                # # await self.record_to_file(self.camera)
-
-            # except Exception as e:
-            #     self.on_indicator.off()
-            #     self.error_indicator.on()
-            #     print (f'Error {e}')
+            except Exception as e:
+                self.on_indicator.off()
+                self.error_indicator.on()
+                print (f'Error {e}')
 
         else:
             print('Camera is already started') 
