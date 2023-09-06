@@ -2,7 +2,7 @@ import os
 import asyncio
 import websockets
 from camera import Camera
-from streamingoutput2 import StreamingOutput2
+from streamingoutput import StreamingOutput
 from light import Light
 from indicator import Indicator
 import json
@@ -273,7 +273,7 @@ if __name__ == '__main__':
     frame_rate = 25   
     
     # Streaming output object
-    output = StreamingOutput2()
+    output = StreamingOutput()
     is_recording = True
 
     # Server host
