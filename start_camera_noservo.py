@@ -111,10 +111,7 @@ async def on_connect(websocket):
 
         def __wait (output):
             with output.condition:
-                t1 = time.time()
                 output.condition.wait()
-                t2 = time.time()
-                print (t2-t1)
                 return output.frame
 
         if not is_recording:
