@@ -19,8 +19,8 @@ class Camera():
 
     async def record_to_file(self, camera, splitter_port=2, size=(1280, 720), quality=30, interval = 60):
     
-        async def wait_recording():
-            camera.wait_recording(interval, splitter_port=splitter_port)
+        # async def wait_recording():
+        #     camera.wait_recording(interval, splitter_port=splitter_port)
 
         first_file = True
 
@@ -50,7 +50,7 @@ class Camera():
                 '''Picamera ver 1'''
                 #camera = picamera.Picamera(resolution='HD', framerate = 30)
                 self.camera = picamera.PiCamera(resolution = frame_size, framerate = frame_rate)
-                self.camera.rotation = 180
+                #self.camera.rotation = 180
                 self.camera.rotation = 0
                 self.camera.contrast = 0
                 self.camera.sharpness = 50

@@ -11,6 +11,7 @@ import base64
 
 import time
 
+
 async def on_control(message):
     # Callback function for control message receved by control websocket
 
@@ -202,6 +203,7 @@ async def on_connect(websocket):
 async def ws_to_client():
     print ('Listening ws from client')
     async with websockets.serve(on_connect, "0.0.0.0", 8000):
+        # Keep on listening for new connection request
         await asyncio.Future()
 
 
@@ -267,7 +269,7 @@ if __name__ == '__main__':
     #frame_size = (640, 480)
     frame_size = (1280, 720)
     # Frame rate
-    frame_rate = 25   
+    frame_rate = 15   
     
     # Streaming output object
     output = StreamingOutput2()
