@@ -256,19 +256,20 @@ async def ws_to_server(server_host):
             continue
 
 
-async def main():
+async def main(camera, output, frame_size, frame_rate, serverHost):
     # Start camera
     task_camera = asyncio.create_task(camera.start_camera(output, frame_size = frame_size, frame_rate = frame_rate))
     # Open connection to server
     task_ws_server = asyncio.create_task(ws_to_server(serverHost))
-    # Listening connection form client
+    # Listening connection from client
     task_ws_client = asyncio.create_task(ws_to_client())
     await task_camera
     await task_ws_server
     await task_ws_client
+    # Resetting indicators state before exit.
+    indicator_1.off()
+    indicator_0.on()
     print ('end')
-
-asyncio.run (main())
 
 
 if __name__ == '__main__':
