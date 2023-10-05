@@ -1,12 +1,12 @@
 import os
 import asyncio
 import websockets
-from functools import partial
 from camera import Camera
-from streamingoutput import StreamingOutput
+# from streamingoutput import StreamingOutput
+from streamingoutput2 import StreamingOutput2
 from servo import Servo
 from light import Light
-from threading import Thread, Condition
+from indicator import Indicator
 import json
 from get_rec_file import get_rec_file
 import base64
@@ -298,3 +298,55 @@ async def main():
     print ('end')
 
 asyncio.run (main())
+
+
+if __name__ == '__main__':
+
+    # Indicators
+    indicator_0 = Indicator(pin = 22)
+    indicator_1 = Indicator(pin = 27)
+    # Resetting indicators state before exit.
+    indicator_1.off()
+    indicator_0.on()
+
+    # Camera object
+    camera = Camera([indicator_1, indicator_0])
+    # Frame size
+    #frame_size = (640, 480)
+    frame_size = (1280, 720)
+    # Frame rate
+    frame_rate = 15   
+    
+    # Streaming output object
+    output = StreamingOutput2()
+    is_recording = True
+
+    # Server host
+    serverHost = "vrserver99.local"
+    t_reconnection = 3
+
+    # Servos
+    servoX = Servo(channel=0)
+    servoY = Servo(channel=1)
+
+    # Light
+    light = Light(pin = 17)
+
+    # Recording files directory
+    rec_path = '../rec/'
+    # Recording files directory
+    mp4_buffer_path = '../mp4buf/'
+    # Rec file bytes
+    rec_file_dict = {}
+    
+    try:
+        asyncio.run (main(camera=camera, 
+                          output=output, 
+                          frame_size=frame_size, 
+                          frame_rate=frame_rate, 
+                          serverHost=serverHost ))
+    except:
+        # Resetting indicators state before exit.
+        indicator_1.off()
+        indicator_0.on()
+        print ('end')
