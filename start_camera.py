@@ -24,23 +24,26 @@ async def on_control(message):
     
     if message['op'] == 'mv':
         # Movement
-        dir = message['dir']
-        if dir == 'L':
-            # Left
-            servoX.start_move(distance = +(message['dist']))
-        elif dir == 'R':
-            # Right
-            servoX.start_move(distance = -(message['dist']))
-        elif dir == 'D':
-            # Down
-            servoY.start_move(distance = +(message['dist']))
-        elif dir == 'U':
-            # Up
-            servoY.start_move(distance = -(message['dist']))
-        elif dir == 'C':
-            # Centering
-            servoX.center()
-            servoY.center()
+        
+        if servoX and servoY:
+            # Move only if the servo is available    
+            dir = message['dir']
+            if dir == 'L':
+                # Left
+                servoX.start_move(distance = +(message['dist']))
+            elif dir == 'R':
+                # Right
+                servoX.start_move(distance = -(message['dist']))
+            elif dir == 'D':
+                # Down
+                servoY.start_move(distance = +(message['dist']))
+            elif dir == 'U':
+                # Up
+                servoY.start_move(distance = -(message['dist']))
+            elif dir == 'C':
+                # Centering
+                servoX.center()
+                servoY.center()
             
     elif message['op'] == 'lt':
         # Light
@@ -298,8 +301,12 @@ if __name__ == '__main__':
     t_reconnection = 3
 
     # Servos
-    servoX = Servo(channel=0)
-    servoY = Servo(channel=1)
+    try:
+        servoX = Servo(channel=0)
+        servoY = Servo(channel=1)
+    except:
+        servoX = None ; servoY = None
+        print ('Servos are not available')
 
     # Light
     light = Light(pin = 17)
