@@ -306,7 +306,7 @@ if __name__ == '__main__':
         servoY = Servo(channel=1)
     except:
         servoX = None ; servoY = None
-        print ('Servos are not available')
+        print ('Warning: Servos are not connected!')
 
     # Light
     light = Light(pin = 17)
