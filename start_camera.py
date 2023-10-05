@@ -12,35 +12,6 @@ from get_rec_file import get_rec_file
 import base64
 
 
-# Server host
-serverHost = "192.168.36.23"
-t_reconnection = 3
-# Camera object
-camera = Camera()
-# Frame size
-#frame_size = (640, 480)
-frame_size = (1280, 720)
-# Frame rate
-frame_rate = 20
-# Streaming output object
-output = StreamingOutput()
-is_recording = True
-
-# Servos
-servoX = Servo(channel=0)
-servoY = Servo(channel=1)
-
-# Light
-light = Light(pin = 17)
-
-# Recording files directory
-rec_path = '../rec/'
-# Recording files directory
-mp4_buffer_path = '../mp4buf/'
-# Rec file bytes
-rec_file_dict = {}
-
-
 async def on_control(message):
     # Callback function for control message receved by control websocket
 
