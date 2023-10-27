@@ -60,7 +60,7 @@ class Camera():
                 self.error_indicator.off()
 
                 print('Camera is started')
-                # await self.record_to_file(self.camera)
+                await self.record_to_file(self.camera)
 
             except Exception as e:
                 self.on_indicator.off()
